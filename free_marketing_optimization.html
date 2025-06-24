@@ -1,0 +1,280 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Free Marketing Optimization{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .optimization-hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+    }
+
+    .optimization-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+
+    .optimization-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto 40px;
+    }
+
+    /* Form Section */
+    .optimization-form {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        max-width: 800px;
+        margin: 0 auto 40px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    select.form-control {
+        height: 46px;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .btn-optimize {
+        background: #8B0000;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-optimize:hover {
+        background: #A52A2A;
+        transform: translateY(-2px);
+    }
+
+    /* Results Section */
+    .optimization-results {
+        background: #f8f8f8;
+        padding: 40px;
+        border-radius: 8px;
+        margin-top: 40px;
+        border-left: 4px solid #8B0000;
+    }
+
+    .optimization-results h2 {
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+
+    .recommendations {
+        white-space: pre-line;
+        line-height: 1.6;
+    }
+
+    /* Limitations Section */
+    .limitations-card {
+        background: #fff8f8;
+        border-radius: 8px;
+        padding: 25px;
+        margin: 40px auto;
+        max-width: 800px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        border-left: 4px solid #d9534f;
+    }
+
+    .limitations-card h3 {
+        color: #d9534f;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+
+    /* New styles for metric explanations */
+    .metric-info {
+        position: relative;
+        display: inline-block;
+        margin-left: 5px;
+        cursor: help;
+    }
+
+    .metric-info i {
+        color: #8B0000;
+        font-size: 0.9em;
+    }
+
+    .metric-tooltip {
+        display: none;
+        position: absolute;
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        width: 250px;
+        z-index: 100;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.9em;
+        line-height: 1.4;
+    }
+
+    .metric-info:hover .metric-tooltip {
+        display: block;
+    }
+
+    .metrics-explanation {
+        background: #f8f8f8;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 15px;
+        border-left: 3px solid #8B0000;
+    }
+
+    .metrics-explanation h4 {
+        margin-top: 0;
+        color: #8B0000;
+    }
+
+    .metrics-explanation ul {
+        margin-bottom: 0;
+        padding-left: 20px;
+    }
+
+    .metrics-explanation li {
+        margin-bottom: 5px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .optimization-form {
+            padding: 20px;
+        }
+        
+        .optimization-hero h1 {
+            font-size: 2em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="optimization-hero">
+    <div class="container">
+        <h1>Marketing Optimization</h1>
+        <p>Get AI-powered recommendations to improve your marketing campaigns and maximize results</p>
+    </div>
+</section>
+
+<div class="container">
+    <form method="POST" class="optimization-form">
+        <h2>Enter Your Campaign Details</h2>
+        
+        <div class="form-group">
+            <label for="campaign_type">Campaign Type</label>
+            <select class="form-control" id="campaign_type" name="campaign_type" required>
+                <option value="">Select campaign type</option>
+                <option value="Social Media">Social Media</option>
+                <option value="Email Marketing">Email Marketing</option>
+                <option value="Search Ads">Search Ads</option>
+                <option value="Display Ads">Display Ads</option>
+                <option value="Content Marketing">Content Marketing</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="campaign_goal">Primary Goal</label>
+            <select class="form-control" id="campaign_goal" name="campaign_goal" required>
+                <option value="">Select primary goal</option>
+                <option value="Brand Awareness">Brand Awareness</option>
+                <option value="Lead Generation">Lead Generation</option>
+                <option value="Sales Conversion">Sales Conversion</option>
+                <option value="Traffic Generation">Traffic Generation</option>
+                <option value="Engagement">Engagement</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="target_audience">Target Audience</label>
+            <input type="text" class="form-control" id="target_audience" name="target_audience" 
+                   placeholder="E.g., Women 25-40, tech professionals, small business owners" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="current_metrics">
+                Current Performance Metrics 
+                <span class="metric-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="metric-tooltip">
+                        Examples: CTR 2.5%, Conversion Rate 1.2%, ROAS 3.5, etc.
+                    </span>
+                </span>
+            </label>
+            <textarea class="form-control" id="current_metrics" name="current_metrics" 
+                      placeholder="Example: CTR 2.5%, Conversion Rate 1.2%, ROAS 3.5"></textarea>
+        </div>
+        
+        <div class="metrics-explanation">
+            <h4>Common Marketing Metrics Explained:</h4>
+            <ul>
+                {% for metric, explanation in metric_explanations.items() %}
+                <li><strong>{{ metric }}:</strong> {{ explanation }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <button type="submit" class="btn-optimize">Get Optimization Recommendations</button>
+    </form>
+
+    {% if recommendations %}
+    <div class="optimization-results">
+        <h2>Optimization Recommendations</h2>
+        <div class="recommendations">{{ recommendations }}</div>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="optimization-results" style="border-left-color: #d9534f;">
+        <h2 style="color: #d9534f;">Error</h2>
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+
+    <div class="limitations-card">
+        <h3><i class="fas fa-exclamation-triangle"></i> Free Plan Limitations</h3>
+        <ul class="service-features">
+            <li>Basic optimization recommendations only</li>
+            <li>Limited to 5 analyses per month</li>
+            <li>No historical data tracking</li>
+            <li>No export functionality</li>
+            <li>Upgrade to unlock advanced features and ongoing optimization</li>
+        </ul>
+        <a href="/plans" class="btn-secondary" style="display: inline-block; margin-top: 15px;">View Plans</a>
+    </div>
+</div>
+{% endblock %}

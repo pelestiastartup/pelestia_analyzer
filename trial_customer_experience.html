@@ -1,0 +1,454 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Trial Customer Experience Analysis{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .trial-cx-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .trial-cx-hero::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: url("{{ url_for('static', filename='images/decorative-icon1.png') }}") no-repeat;
+        background-size: contain;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .trial-cx-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .trial-cx-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto 30px;
+        position: relative;
+    }
+    
+    .trial-tag {
+        display: inline-block;
+        background-color: #8B0000;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    /* Features Section */
+    .trial-cx-features {
+        padding: 60px 20px;
+        background-color: white;
+    }
+    
+    .features-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .features-title {
+        text-align: center;
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 40px;
+        position: relative;
+    }
+    
+    .features-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+    
+    .feature-card {
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border-left: 4px solid #8B0000;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+    
+    .feature-card p {
+        color: #666;
+        font-size: 1em;
+        line-height: 1.6;
+    }
+
+    /* Process Section */
+    .trial-cx-process {
+        padding: 80px 20px;
+        background-color: #f9f9f9;
+    }
+    
+    .process-steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+    
+    .step {
+        flex: 1;
+        min-width: 200px;
+        text-align: center;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: #8B0000;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+    
+    .step h3 {
+        color: #8B0000;
+        margin-bottom: 10px;
+    }
+
+    /* Form Section */
+    .trial-cx-form {
+        padding: 60px 20px;
+        background-color: white;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1em;
+    }
+    
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+    
+    .form-tooltip {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 5px;
+        font-style: italic;
+    }
+    
+    .btn-submit {
+        display: inline-block;
+        padding: 15px 30px;
+        background: #8B0000;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1em;
+    }
+    
+    .btn-submit:hover {
+        background: #A52A2A;
+        transform: translateY(-3px);
+    }
+
+    /* Results Section */
+    .trial-cx-results {
+        padding: 60px 20px;
+        background-color: #f9f9f9;
+    }
+    
+    .results-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .ai-powered-badge {
+        display: inline-block;
+        background: #8B0000;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+    
+    .recommendation-card {
+        background: white;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        border-left: 4px solid #8B0000;
+    }
+    
+    .recommendation-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+    }
+    
+    .recommendation-card ul {
+        margin-left: 20px;
+    }
+    
+    .recommendation-card li {
+        margin-bottom: 10px;
+    }
+
+    /* Limitations Section */
+    .trial-cx-limitations {
+        padding: 60px 20px;
+        background-color: white;
+        text-align: center;
+    }
+    
+    .limitations-card {
+        background: #fff8f8;
+        border-radius: 8px;
+        padding: 30px;
+        margin: 0 auto;
+        max-width: 800px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        border-left: 4px solid #d9534f;
+    }
+    
+    .limitations-card h3 {
+        color: #d9534f;
+        margin-bottom: 15px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .trial-cx-hero {
+            padding: 80px 20px;
+        }
+        
+        .trial-cx-hero h1 {
+            font-size: 2em;
+        }
+        
+        .process-steps {
+            flex-direction: column;
+        }
+        
+        .step {
+            margin-bottom: 30px;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="trial-cx-hero">
+    <div class="container">
+        <span class="trial-tag">5-Day Free Trial</span>
+        <h1>AI-Powered Customer Experience Analysis</h1>
+        <p>Optimize every customer touchpoint with Pelestia's advanced AI insights during your 5-day trial. Get deeper analytics and real-time recommendations to enhance satisfaction and loyalty.</p>
+    </div>
+</section>
+
+<section class="trial-cx-features">
+    <div class="features-container">
+        <h2 class="features-title">Trial Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Advanced Sentiment Analysis</h3>
+                <p>Get detailed sentiment breakdowns from customer feedback across multiple channels, with emotion detection and trend analysis.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Behavioral Analytics</h3>
+                <p>Track customer journeys with heatmaps and session recordings to identify pain points and drop-off areas.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Support Optimization</h3>
+                <p>Analyze support ticket data to improve response times, resolution rates, and customer satisfaction scores.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Real-Time Recommendations</h3>
+                <p>Receive ongoing AI-powered suggestions as you make changes to your customer experience strategy.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Limited API Integrations</h3>
+                <p>Connect with select platforms like Google Analytics and Zendesk for automated data collection during your trial.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Custom Reporting</h3>
+                <p>Generate detailed reports with visualizations to track CX improvements across your trial period.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="trial-cx-process">
+    <div class="container">
+        <h2 class="features-title">How It Works</h2>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Input Your Data</h3>
+                <p>Provide customer experience data manually or connect limited APIs during your trial.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>AI Analysis</h3>
+                <p>Pelestia AI processes your data with advanced algorithms to identify key insights.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Get Recommendations</h3>
+                <p>Receive prioritized, actionable suggestions to improve each customer touchpoint.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Track Improvements</h3>
+                <p>Monitor real-time changes as you implement our AI-powered recommendations.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if not recommendations %}
+<section class="trial-cx-form">
+    <h2 class="features-title">Start Your Trial Analysis</h2>
+    <p>Enter details about your customer experience to receive personalized AI recommendations during your trial period.</p>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="website_data">Website Experience Data</label>
+            <textarea id="website_data" name="website_data" class="form-control" placeholder="Describe user behavior, conversion funnels, and any pain points...">{{ form_data.website_data if form_data }}</textarea>
+            <div class="form-tooltip">Include details about navigation, checkout process, and mobile responsiveness.</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="support_data">Customer Support Data</label>
+            <textarea id="support_data" name="support_data" class="form-control" placeholder="Paste support ticket summaries, response times, and resolution rates...">{{ form_data.support_data if form_data }}</textarea>
+            <div class="form-tooltip">Include metrics like first response time, resolution rate, and CSAT scores if available.</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="feedback_data">Customer Feedback</label>
+            <textarea id="feedback_data" name="feedback_data" class="form-control" placeholder="Paste customer reviews, survey responses, and social media comments...">{{ form_data.feedback_data if form_data }}</textarea>
+            <div class="form-tooltip">Include both positive and negative feedback for balanced analysis.</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="purchase_data">Post-Purchase Experience</label>
+            <textarea id="purchase_data" name="purchase_data" class="form-control" placeholder="Describe follow-up communications, return processes, and loyalty programs...">{{ form_data.purchase_data if form_data }}</textarea>
+            <div class="form-tooltip">Include details about email sequences, product onboarding, and retention efforts.</div>
+        </div>
+        
+        <button type="submit" class="btn-submit">Analyze with Pelestia AI</button>
+    </form>
+</section>
+{% else %}
+<section class="trial-cx-results">
+    <div class="container">
+        <div class="results-header">
+            <div class="ai-powered-badge">Pelestia AI Analysis</div>
+            <h2>Your Customer Experience Recommendations</h2>
+            <p>Based on your input, here are our AI-powered recommendations to enhance your customer experience during your trial:</p>
+        </div>
+        
+        <div>
+            {% for recommendation in recommendations %}
+            <div class="recommendation-card">
+                <h3>{{ recommendation.title }}</h3>
+                <ul>
+                    {% for item in recommendation.content %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{{ url_for('trial_customer_experience') }}" class="btn-submit">Start New Analysis</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="trial-cx-limitations">
+    <div class="container">
+        <h2 class="features-title">Trial Limitations</h2>
+        <div class="limitations-card">
+            <h3>Important Trial Restrictions</h3>
+            <ul>
+                <li>Limited to 5 comprehensive analyses during your trial period</li>
+                <li>API integrations restricted to 2 external platforms</li>
+                <li>Data retention limited to trial period duration</li>
+                <li>No priority support during trial</li>
+                <li>Advanced features like A/B testing limited to basic functionality</li>
+            </ul>
+            <p style="margin-top: 20px;">Upgrade to a paid plan for full access to all features, unlimited analyses, and premium support.</p>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/plans" class="btn-submit" style="background: #d9534f;">View Upgrade Options</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

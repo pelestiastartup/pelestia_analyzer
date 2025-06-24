@@ -1,0 +1,514 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Strategic Partnerships | Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #8B0000;
+        --secondary-color: #FF6347;
+        --light-gray: #f8f9fa;
+        --dark-gray: #343a40;
+    }
+    
+    .partnerships-hero {
+        background: linear-gradient(135deg, var(--light-gray) 0%, #e9ecef 100%);
+        padding: 100px 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .partnerships-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: var(--dark-gray);
+    }
+    
+    .targeted-notice {
+        background: #FFF8E1;
+        padding: 15px;
+        border-left: 4px solid #FFC107;
+        max-width: 800px;
+        margin: 20px auto;
+        font-size: 0.95em;
+    }
+    
+    .partnerships-container {
+        max-width: 1200px;
+        margin: 60px auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 0 20px;
+    }
+    
+    @media (min-width: 992px) {
+        .partnerships-container {
+            grid-template-columns: 1fr 2fr;
+        }
+    }
+    
+    .partnership-intro {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        align-self: start;
+        position: sticky;
+        top: 20px;
+    }
+    
+    .partnership-intro h2 {
+        color: var(--primary-color);
+        margin-bottom: 20px;
+    }
+    
+    .partnership-intro .btn {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s;
+    }
+    
+    .partnership-intro .btn:hover {
+        background-color: var(--primary-color);
+    }
+    
+    .partner-categories {
+        margin-bottom: 40px;
+    }
+    
+    .partner-categories h2 {
+        color: var(--primary-color);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .partner-cards {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .partner-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 25px;
+        align-items: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-left: 4px solid var(--secondary-color);
+        position: relative;
+    }
+    
+    .partner-card::before {
+        content: "Target Partner";
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: var(--primary-color);
+        color: white;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 0.7em;
+        font-weight: bold;
+    }
+    
+    .partner-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .partner-card-icon {
+        font-size: 3em;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .partner-card h3 {
+        color: var(--dark-gray);
+        margin-bottom: 10px;
+    }
+    
+    .partner-logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+        align-items: center;
+    }
+    
+    .partner-logo {
+        height: 40px;
+        width: auto;
+        max-width: 120px;
+        object-fit: contain;
+        filter: grayscale(100%);
+        opacity: 0.7;
+        transition: all 0.3s;
+    }
+    
+    .partner-logo:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    
+    .category-title {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin: 40px 0 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--light-gray);
+    }
+    
+    @media (max-width: 768px) {
+        .partner-card {
+            grid-template-columns: 1fr;
+        }
+        
+        .partner-card-icon {
+            display: none;
+        }
+        
+        .partner-card::before {
+            position: static;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .partnerships-hero {
+            padding: 60px 20px;
+        }
+        
+        .partnerships-hero h1 {
+            font-size: 2rem;
+        }
+    }
+    
+    /* Homepage partners section */
+    .homepage-partners {
+        background: var(--light-gray);
+        padding: 80px 20px;
+        text-align: center;
+    }
+    
+    .homepage-partners h2 {
+        color: var(--primary-color);
+        margin-bottom: 40px;
+    }
+    
+    .partner-slider {
+        display: flex;
+        overflow-x: auto;
+        gap: 30px;
+        padding: 20px 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .partner-slide {
+        scroll-snap-align: start;
+        flex: 0 0 auto;
+    }
+    
+    .partner-slide img {
+        height: 60px;
+        width: auto;
+        max-width: 150px;
+        object-fit: contain;
+        filter: grayscale(100%);
+        opacity: 0.7;
+        transition: all 0.3s;
+    }
+    
+    .partner-slide img:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+    
+    /* Header partners */
+    .header-partners {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 0;
+        overflow-x: auto;
+    }
+    
+    .header-partners img {
+        height: 30px;
+        width: auto;
+        max-width: 100px;
+        filter: grayscale(100%);
+        opacity: 0.7;
+        transition: all 0.3s;
+    }
+    
+    .header-partners img:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+    
+    /* Footer partners */
+    .footer-partners {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 20px 0;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        margin: 20px 0;
+    }
+    
+    .footer-partners img {
+        height: 25px;
+        width: auto;
+        max-width: 80px;
+        filter: brightness(0) invert(1) opacity(0.7);
+        transition: all 0.3s;
+    }
+    
+    .footer-partners img:hover {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="partnerships-hero">
+    <div class="container">
+        <h1>Strategic Partnerships We're Targeting</h1>
+        <p class="lead">We are actively seeking collaborations with industry leaders across Algeria to deliver exceptional AI-powered solutions</p>
+        <div class="targeted-notice">
+            <strong>Note:</strong> These are strategic partnerships we are actively targeting and seeking to establish with leading companies in Algeria.
+        </div>
+    </div>
+</section>
+
+<div class="partnerships-container">
+    <div class="partnership-intro">
+        <h2>Partnerships We're Targeting</h2>
+        <p>We are actively pursuing strategic partnerships with major Algerian companies and institutions that align with our mission to transform businesses through AI-powered solutions.</p>
+        <p>By collaborating with industry leaders, we aim to enhance our service offerings and expand our reach across Algeria. The partnerships shown on this page represent our current targets for collaboration.</p>
+        <a href="/contact" class="btn">Become a Partner</a>
+        
+        <div class="partner-logos" style="margin-top: 30px;">
+            <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">Example companies we're targeting:</p>
+            <img src="{{ url_for('static', filename='images/partners/ooredoo.png') }}" alt="Ooredoo" class="partner-logo">
+            <img src="{{ url_for('static', filename='images/partners/jumia.png') }}" alt="Jumia" class="partner-logo">
+            <img src="{{ url_for('static', filename='images/partners/bea.png') }}" alt="BEA" class="partner-logo">
+            <img src="{{ url_for('static', filename='images/partners/ardis.png') }}" alt="Ardis" class="partner-logo">
+        </div>
+    </div>
+    
+    <div class="partner-categories">
+        <h2>Our Targeted Partnership Categories</h2>
+        
+        <div class="partner-cards">
+            <!-- Telecom Companies -->
+            <h3 class="category-title">Telecommunication Companies We Are Targeting</h3>
+            <div class="partner-card">
+                <div class="partner-card-icon">
+                    <i class="fas fa-tower-cell"></i>
+                </div>
+                <div>
+                    <h3>Ooredoo, Mobilis, Djezzy</h3>
+                    <p>Potential for AI-powered marketing optimization and customer engagement solutions to enhance telecom services and customer experience.</p>
+                    <div class="partner-logos">
+                        <img src="{{ url_for('static', filename='images/partners/ooredoo.png') }}" alt="Ooredoo" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/mobilis.png') }}" alt="Mobilis" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/djezzy.png') }}" alt="Djezzy" class="partner-logo">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- E-commerce Platforms -->
+            <h3 class="category-title">E-commerce Platforms We Are Targeting</h3>
+            <div class="partner-card">
+                <div class="partner-card-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div>
+                    <h3>Jumia Algeria, Ouedkniss</h3>
+                    <p>Optimizing customer experience and boosting sales via tailored marketing strategies and AI-driven product recommendations.</p>
+                    <div class="partner-logos">
+                        <img src="{{ url_for('static', filename='images/partners/jumia.png') }}" alt="Jumia" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/ouedkniss.png') }}" alt="Ouedkniss" class="partner-logo">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Banks & Financial Institutions -->
+            <h3 class="category-title">Banks & Financial Institutions We Are Targeting</h3>
+            <div class="partner-card">
+                <div class="partner-card-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <div>
+                    <h3>BEA, CNEP, BNA</h3>
+                    <p>Enhancing financial product offerings and customer care through AI tools for fraud detection, personalized banking, and risk assessment.</p>
+                    <div class="partner-logos">
+                        <img src="{{ url_for('static', filename='images/partners/bea.png') }}" alt="BEA" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/cnep.png') }}" alt="CNEP" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/bna.png') }}" alt="BNA" class="partner-logo">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Consulting Firms -->
+            <h3 class="category-title">Consulting Firms We Are Targeting</h3>
+            <div class="partner-card">
+                <div class="partner-card-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div>
+                    <h3>KPMG Algeria, Deloitte Algeria</h3>
+                    <p>Collaborating on digital transformation projects and AI implementation strategies for enterprise clients.</p>
+                    <div class="partner-logos">
+                        <img src="{{ url_for('static', filename='images/partners/kpmg.png') }}" alt="KPMG" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/deloitte.png') }}" alt="Deloitte" class="partner-logo">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Retailers & Supermarkets -->
+            <h3 class="category-title">Retailers & Supermarkets We Are Targeting</h3>
+            <div class="partner-card">
+                <div class="partner-card-icon">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div>
+                    <h3>Ardis, City Center, Cevital Group</h3>
+                    <p>Improving customer experience and brand reputation for the retail sector through AI-powered insights.</p>
+                    <div class="partner-logos">
+                        <img src="{{ url_for('static', filename='images/partners/ardis.png') }}" alt="Ardis" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/city-center.png') }}" alt="City Center" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/cevital.png') }}" alt="Cevital Group" class="partner-logo">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Logistics & Shipping -->
+            <h3 class="category-title">Logistics & Shipping Companies We Are Targeting</h3>
+            <div class="partner-card">
+                <div class="partner-card-icon">
+                    <i class="fas fa-truck-fast"></i>
+                </div>
+                <div>
+                    <h3>DHL, Zr Express, UPS Express</h3>
+                    <p>Developing AI solutions for route optimization, delivery tracking, and supply chain management to enhance logistics operations.</p>
+                    <div class="partner-logos">
+                        <img src="{{ url_for('static', filename='images/partners/dhl.png') }}" alt="DHL" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/zr-express.png') }}" alt="Zr Express" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/ups.png') }}" alt="UPS Express" class="partner-logo">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Education & Universities -->
+            <h3 class="category-title">Education & Universities We Are Targeting</h3>
+            <div class="partner-card">
+                <div class="partner-card-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h3>University of Laghouat, University Incubator of Laghouat, ANPT</h3>
+                    <p>Partnering with academic institutions and technology parks to foster AI research, talent development, and technology transfer opportunities.</p>
+                    <div class="partner-logos">
+                        <img src="{{ url_for('static', filename='images/partners/laghouat-university.png') }}" alt="University of Laghouat" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/laghouat-incubator.png') }}" alt="University Incubator of Laghouat" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/anpt.png') }}" alt="ANPT" class="partner-logo">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Government & NGOs -->
+            <h3 class="category-title">Government & NGOs We Are Targeting</h3>
+            <div class="partner-card">
+                <div class="partner-card-icon">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <div>
+                    <h3>Algerian Ministry of Digital Economy, ANAPI</h3>
+                    <p>Collaborating on national digital transformation initiatives and supporting AI adoption in public services and economic development through the Algerian Ministry of Digital Economy and the National Agency for Promotion of Investment (ANAPI).</p>
+                    <div class="partner-logos">
+                        <img src="{{ url_for('static', filename='images/partners/mdn.png') }}" alt="Ministry of Digital Economy" class="partner-logo">
+                        <img src="{{ url_for('static', filename='images/partners/anapi.png') }}" alt="ANAPI" class="partner-logo">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- This section would be included in your home.html template -->
+<section class="homepage-partners">
+    <div class="container">
+        <h2>Strategic Partnerships We're Pursuing</h2>
+        <p class="lead">We are actively seeking collaborations with these industry leaders</p>
+        
+        <div class="partner-slider">
+            <div class="partner-slide">
+                <img src="{{ url_for('static', filename='images/partners/ooredoo.png') }}" alt="Ooredoo">
+            </div>
+            <div class="partner-slide">
+                <img src="{{ url_for('static', filename='images/partners/jumia.png') }}" alt="Jumia">
+            </div>
+            <div class="partner-slide">
+                <img src="{{ url_for('static', filename='images/partners/bea.png') }}" alt="BEA">
+            </div>
+            <div class="partner-slide">
+                <img src="{{ url_for('static', filename='images/partners/ardis.png') }}" alt="Ardis">
+            </div>
+            <div class="partner-slide">
+                <img src="{{ url_for('static', filename='images/partners/mobilis.png') }}" alt="Mobilis">
+            </div>
+            <div class="partner-slide">
+                <img src="{{ url_for('static', filename='images/partners/kpmg.png') }}" alt="KPMG">
+            </div>
+            <div class="partner-slide">
+                <img src="{{ url_for('static', filename='images/partners/dhl.png') }}" alt="DHL">
+            </div>
+            <div class="partner-slide">
+                <img src="{{ url_for('static', filename='images/partners/laghouat-university.png') }}" alt="University of Laghouat">
+            </div>
+        </div>
+        
+        <a href="/partnerships" class="btn" style="margin-top: 30px;">View All Targeted Partnerships</a>
+    </div>
+</section>
+{% endblock %}
+
+<!-- These sections would be included in your base.html template -->
+<!-- Header Partners (add this where appropriate in your header) -->
+<div class="header-partners">
+    <img src="{{ url_for('static', filename='images/partners/ooredoo.png') }}" alt="Ooredoo">
+    <img src="{{ url_for('static', filename='images/partners/jumia.png') }}" alt="Jumia">
+    <img src="{{ url_for('static', filename='images/partners/bea.png') }}" alt="BEA">
+    <img src="{{ url_for('static', filename='images/partners/ardis.png') }}" alt="Ardis">
+    <img src="{{ url_for('static', filename='images/partners/mobilis.png') }}" alt="Mobilis">
+    <img src="{{ url_for('static', filename='images/partners/dhl.png') }}" alt="DHL">
+</div>
+
+<!-- Footer Partners (add this where appropriate in your footer) -->
+<div class="footer-partners">
+    <img src="{{ url_for('static', filename='images/partners/ooredoo.png') }}" alt="Ooredoo">
+    <img src="{{ url_for('static', filename='images/partners/jumia.png') }}" alt="Jumia">
+    <img src="{{ url_for('static', filename='images/partners/bea.png') }}" alt="BEA">
+    <img src="{{ url_for('static', filename='images/partners/ardis.png') }}" alt="Ardis">
+    <img src="{{ url_for('static', filename='images/partners/mobilis.png') }}" alt="Mobilis">
+    <img src="{{ url_for('static', filename='images/partners/kpmg.png') }}" alt="KPMG">
+    <img src="{{ url_for('static', filename='images/partners/dhl.png') }}" alt="DHL">
+    <img src="{{ url_for('static', filename='images/partners/laghouat-university.png') }}" alt="University of Laghouat">
+</div>

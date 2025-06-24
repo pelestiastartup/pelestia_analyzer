@@ -1,0 +1,395 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Pricing Plans{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Pricing Section */
+    .pricing-section {
+        padding: 80px 20px;
+        background-color: #f9f9f9;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+
+    .section-subtitle {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 50px;
+        color: #666;
+        font-size: 1.1em;
+    }
+
+    .pricing-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .pricing-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .pricing-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .pricing-card.popular::before {
+        content: 'Most Popular';
+        position: absolute;
+        top: 15px;
+        right: -30px;
+        background: #8B0000;
+        color: white;
+        padding: 5px 30px;
+        font-size: 0.8em;
+        font-weight: bold;
+        transform: rotate(45deg);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .pricing-header {
+        padding: 30px;
+        text-align: center;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        border-bottom: 1px solid #eee;
+    }
+
+    .pricing-name {
+        font-size: 1.5em;
+        color: #8B0000;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .pricing-price {
+        font-size: 2.2em;
+        font-weight: bold;
+        color: #222;
+        margin-bottom: 5px;
+    }
+
+    .pricing-period {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .pricing-features {
+        padding: 30px;
+    }
+
+    .feature-list {
+        list-style: none;
+        margin-bottom: 30px;
+    }
+
+    .feature-list li {
+        padding: 8px 0;
+        color: #555;
+        position: relative;
+        padding-left: 25px;
+    }
+
+    .feature-list li::before {
+        content: '✓';
+        color: #8B0000;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .pricing-button {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        background-color: #8B0000;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s;
+        border: 2px solid #8B0000;
+    }
+
+    .pricing-button:hover {
+        background-color: #A52A2A;
+        border-color: #A52A2A;
+        transform: translateY(-2px);
+    }
+
+    .pricing-button.secondary {
+        background-color: transparent;
+        color: #8B0000;
+    }
+
+    .pricing-button.secondary:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* Comparison Table */
+    .comparison-section {
+        padding: 60px 20px;
+        background-color: white;
+    }
+
+    .comparison-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    th {
+        background-color: #f9f9f9;
+        color: #8B0000;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .feature-name {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .tick-icon {
+        color: #8B0000;
+        font-weight: bold;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .pricing-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .pricing-card.popular::before {
+            right: -25px;
+            font-size: 0.7em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="pricing-section">
+    <div class="container">
+        <h2 class="section-title">Choose Your Plan</h2>
+        <p class="section-subtitle">Select the perfect plan for your business needs. Start small or go all-in with our enterprise solution.</p>
+        
+        <div class="pricing-cards">
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Free Plan</h3>
+                    <div class="pricing-price">Free</div>
+                    <div class="pricing-period">Always free</div>
+                </div>
+                <div class="pricing-features">
+                    <ul class="feature-list">
+                        <li>Basic content templates</li>
+                        <li>Basic AI suggestions</li>
+                        <li>Basic customer reports</li>
+                        <li>5 AI queries/month</li>
+                        <li>Limited data in reports</li>
+                    </ul>
+                    <a href="/free-plan" class="pricing-button secondary">Get Started</a>
+                </div>
+            </div>
+
+            <!-- Trial Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">5-Day Trial</h3>
+                    <div class="pricing-price">Free</div>
+                    <div class="pricing-period">for 5 days</div>
+                </div>
+                <div class="pricing-features">
+                    <ul class="feature-list">
+                        <li>Advanced templates</li>
+                        <li>Full optimization access</li>
+                        <li>Full customer management</li>
+                        <li>Unlimited AI queries</li>
+                        <li>5 reports/day limit</li>
+                    </ul>
+                    <a href="/trial-plan" class="pricing-button">Start 5-Day Trial</a>
+                </div>
+            </div>
+
+            <!-- Monthly Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Monthly Plan</h3>
+                    <div class="pricing-price">5,000 DZD</div>
+                    <div class="pricing-period">per month</div>
+                </div>
+                <div class="pricing-features">
+                    <ul class="feature-list">
+                        <li>All templates & tools</li>
+                        <li>50 optimizations/month</li>
+                        <li>Full customer tools</li>
+                        <li>100 AI queries/month</li>
+                        <li>Basic integrations</li>
+                    </ul>
+                    <a href="/monthly-paid-plan" class="pricing-button">Get Started</a>
+                </div>
+            </div>
+
+            <!-- Yearly Plan (Most Popular) -->
+            <div class="pricing-card popular">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Yearly Plan</h3>
+                    <div class="pricing-price">50,000 DZD</div>
+                    <div class="pricing-period">per year (save 16%)</div>
+                </div>
+                <div class="pricing-features">
+                    <ul class="feature-list">
+                        <li>Unlimited templates & tools</li>
+                        <li>Unlimited optimizations</li>
+                        <li>Advanced customer features</li>
+                        <li>Unlimited AI queries</li>
+                        <li>All integrations</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <a href="/yearly-paid-plan" class="pricing-button">Subscribe Now</a>
+                </div>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3 class="pricing-name">Enterprise</h3>
+                    <div class="pricing-price">Custom</div>
+                    <div class="pricing-period">starting from 100,000 DZD</div>
+                </div>
+                <div class="pricing-features">
+                    <ul class="feature-list">
+                        <li>Custom templates & tools</li>
+                        <li>Custom AI strategies</li>
+                        <li>Custom customer tracking</li>
+                        <li>Unlimited consultations</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated account manager</li>
+                    </ul>
+                    <a href="/request-demo" class="pricing-button secondary">Request a Demo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="comparison-section">
+    <div class="container">
+        <h2 class="section-title">Plan Comparison</h2>
+        <p class="section-subtitle">See how our plans stack up against each other</p>
+        
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Free</th>
+                        <th>Trial</th>
+                        <th>Monthly</th>
+                        <th>Yearly</th>
+                        <th>Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature-name">Content Creation Tools</td>
+                        <td>Basic</td>
+                        <td>Advanced</td>
+                        <td>Full</td>
+                        <td>Unlimited</td>
+                        <td>Custom</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Marketing Optimization</td>
+                        <td>Basic</td>
+                        <td>Full</td>
+                        <td>50/month</td>
+                        <td>Unlimited</td>
+                        <td>Custom</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Customer Management</td>
+                        <td>Basic</td>
+                        <td>Full</td>
+                        <td>Full</td>
+                        <td>Advanced</td>
+                        <td>Custom</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">AI Consultation</td>
+                        <td>5/month</td>
+                        <td>Unlimited</td>
+                        <td>100/month</td>
+                        <td>Unlimited</td>
+                        <td>Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Reports</td>
+                        <td>Basic</td>
+                        <td>5/day</td>
+                        <td>Unlimited</td>
+                        <td>Advanced</td>
+                        <td>Custom</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Integrations</td>
+                        <td>None</td>
+                        <td>None</td>
+                        <td>1-2</td>
+                        <td>Unlimited</td>
+                        <td>Custom</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Support</td>
+                        <td>None</td>
+                        <td>Basic</td>
+                        <td>Basic</td>
+                        <td>Priority</td>
+                        <td>Dedicated</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

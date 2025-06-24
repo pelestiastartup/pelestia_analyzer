@@ -1,0 +1,394 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Monthly Paid Plan{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero-container {
+        width: 100%;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: url('/static/images/decorative-icon1.png') no-repeat;
+        background-size: contain;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .brand-tagline {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    
+    .hero h1 {
+        font-size: 2.2em;
+        margin: 0 auto 20px;
+        max-width: 800px;
+        line-height: 1.2;
+        color: #222;
+    }
+    
+    .hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto 30px;
+    }
+
+    /* Plan Highlights Section */
+    .plan-highlights {
+        padding: 60px 20px;
+        background-color: #f9f9f9;
+    }
+
+    .highlight-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .highlight-container h2 {
+        color: #8B0000;
+        font-size: 2em;
+        margin-bottom: 30px;
+        position: relative;
+        display: inline-block;
+    }
+
+    .highlight-container h2::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+
+    .highlight-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .highlight-card h3 {
+        color: #8B0000;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .highlight-card p {
+        color: #555;
+        line-height: 1.8;
+        font-size: 1.1em;
+    }
+
+    /* Services Section */
+    .services-section {
+        padding: 60px 20px;
+        background-color: white;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .service-card {
+        background: #f9f9f9;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .service-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: #8B0000;
+        opacity: 0.1;
+        border-radius: 50%;
+        transform: translate(50%, 50%);
+    }
+
+    .service-icon {
+        font-size: 2.5em;
+        color: #8B0000;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .service-content {
+        padding: 30px;
+    }
+
+    .service-content h3 {
+        color: #222;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+
+    .service-content p {
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .service-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #8B0000;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .service-link:hover {
+        background: #A52A2A;
+        transform: translateY(-2px);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+        color: white;
+        text-align: center;
+    }
+
+    .cta-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .cta-container h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .cta-container p {
+        font-size: 1.1em;
+        margin-bottom: 30px;
+        opacity: 0.9;
+    }
+
+    .cta-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: white;
+        color: #8B0000;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .cta-btn:hover {
+        background: #f0f0f0;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .hero {
+            padding: 80px 20px;
+        }
+        
+        .brand-tagline {
+            font-size: 2em;
+        }
+        
+        .hero h1 {
+            font-size: 1.8em;
+        }
+        
+        .services-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-container">
+    <section class="hero">
+        <div class="hero-content">
+            <div class="brand-tagline">MONTHLY PLAN</div>
+            <h1>Flexible Access to Advanced Features</h1>
+            <p>The Monthly Paid Plan is for businesses that want regular access to Pelestia's advanced features on a monthly basis. It provides more flexibility than the free and trial plans.</p>
+        </div>
+    </section>
+</div>
+
+<!-- Plan Highlights Section -->
+<section class="plan-highlights">
+    <div class="highlight-container">
+        <h2>What's Included</h2>
+        <div class="highlight-card">
+            <h3>Full Access, Monthly Flexibility</h3>
+            <p>Get all the premium features of Pelestia with the flexibility of a monthly subscription. Perfect for businesses that want to scale their marketing efforts without long-term commitments.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section">
+    <div class="container">
+        <h2 class="section-title">Services Available</h2>
+        <div class="services-grid">
+            <!-- Content Creation Tools -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-pen-fancy"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Content Creation Tools</h3>
+                    <p>Unlimited access to all templates, content creation tools, and AI-powered content generation with full customization options.</p>
+                    <a href="/monthly-paid-plan/content-creation" class="service-link">Learn More</a>
+                </div>
+            </div>
+
+            <!-- Marketing Strategy -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Marketing Strategy Optimization</h3>
+                    <p>Full access to AI-driven marketing optimizations (up to 50 optimizations per month) with unlimited strategy improvements.</p>
+                    <a href="/monthly-paid-plan/marketing-strategy" class="service-link">Learn More</a>
+                </div>
+            </div>
+
+            <!-- Customer Experience -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Customer Experience Management</h3>
+                    <p>Advanced customer tracking, segmentation, behavior analysis, and real-time feedback collection tools.</p>
+                    <a href="/monthly-paid-plan/customer-experience" class="service-link">Learn More</a>
+                </div>
+            </div>
+
+            <!-- AI Consultation -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="service-content">
+                    <h3>AI Consultation</h3>
+                    <p>Unlimited AI consultations with up to 100 queries per month and personalized recommendations.</p>
+                    <a href="/monthly-paid-plan/ai-consultation" class="service-link">Learn More</a>
+                </div>
+            </div>
+
+            <!-- Reports & Dashboards -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Reports & Dashboards</h3>
+                    <p>Unlimited reports with advanced data analysis and customizable dashboards for real-time monitoring.</p>
+                    <a href="/monthly-paid-plan/reports-dashboards" class="service-link">Learn More</a>
+                </div>
+            </div>
+
+            <!-- Integrations -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Integrations</h3>
+                    <p>Connect with 1-2 external platforms like CRM, social media, and email marketing tools.</p>
+                    <a href="/monthly-paid-plan/integrations" class="service-link">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="cta-container">
+        <h2>Ready to Get Started?</h2>
+        <p>Join thousands of businesses using Pelestia to transform their marketing strategies.</p>
+        <a href="/create-account" class="cta-btn">Sign Up Now</a>
+    </div>
+</section>
+
+<!-- Limitations Section -->
+<section class="plan-highlights">
+    <div class="highlight-container">
+        <h2>Plan Limitations</h2>
+        <div class="highlight-card">
+            <h3>What to Keep in Mind</h3>
+            <p>This plan includes limited integrations (1-2 platforms) and standard support (no priority support). For unlimited integrations and priority support, consider our Yearly Plan.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

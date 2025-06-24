@@ -1,0 +1,524 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - AI Content Creation for Algerian Market{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .content-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+        background-image: url("{{ url_for('static', filename='images/algeria-bg-pattern.png') }}");
+        background-size: cover;
+        background-position: center;
+    }
+    
+    .content-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        position: relative;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .content-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto 30px;
+        position: relative;
+    }
+    
+    .trial-tag {
+        display: inline-block;
+        background-color: #8B0000;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    /* Content Creation Section */
+    .content-creation {
+        padding: 60px 20px;
+        background-color: white;
+    }
+    
+    .section-title {
+        text-align: center;
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 40px;
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+    
+    .creation-form {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #444;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+    }
+    
+    .form-group textarea {
+        min-height: 120px;
+    }
+    
+    /* Strategy Output Section */
+    .strategy-output {
+        padding: 40px 20px;
+        background-color: #f0f8ff;
+    }
+    
+    .strategy-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+    
+    .strategy-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .strategy-card h3 i {
+        margin-right: 10px;
+    }
+    
+    .strategy-content {
+        color: #555;
+        line-height: 1.6;
+    }
+    
+    /* Content Preview */
+    .content-preview {
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 20px 0;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    /* How It Works Section */
+    .how-it-works {
+        padding: 60px 20px;
+        background-color: white;
+    }
+    
+    .steps-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .step-card {
+        text-align: center;
+        padding: 25px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+    
+    .step-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .step-icon {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 15px;
+    }
+    
+    .step-number {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background: #8B0000;
+        color: white;
+        border-radius: 50%;
+        line-height: 30px;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+    
+    /* Limitations Section */
+    .limitations {
+        padding: 60px 20px;
+        background-color: #f9f9f9;
+    }
+    
+    .limitations-list {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .limitations-list li {
+        padding: 10px 0;
+        color: #555;
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .limitations-list li::before {
+        content: '•';
+        color: #8B0000;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        font-size: 1.5em;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        padding: 80px 20px;
+        background-color: #8B0000;
+        color: white;
+        text-align: center;
+    }
+    
+    .cta-section h2 {
+        margin-bottom: 20px;
+    }
+    
+    .cta-section p {
+        max-width: 600px;
+        margin: 0 auto 30px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .content-hero {
+            padding: 80px 20px;
+        }
+        
+        .content-hero h1 {
+            font-size: 2em;
+        }
+        
+        .steps-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="content-hero">
+    <div class="container">
+        <span class="trial-tag">5-Day Free Trial</span>
+        <h1>Create Content with AI and Get Tailored Strategies for the Algerian Market</h1>
+        <p>Start your trial and use Pelestia AI to create engaging content and get personalized strategies for your audience in Algeria.</p>
+        <a href="#create-content" class="btn">Start Creating Content</a>
+    </div>
+</section>
+
+<!-- Content Creation Section -->
+<section class="content-creation" id="create-content">
+    <div class="container">
+        <h2 class="section-title">Create Engaging Content with AI</h2>
+        <div class="creation-form">
+            <form id="content-form">
+                <div class="form-group">
+                    <label for="business-type">Your Business Type</label>
+                    <input type="text" id="business-type" placeholder="E.g., Restaurant, E-commerce, Local Service">
+                </div>
+                
+                <div class="form-group">
+                    <label for="target-audience">Your Target Audience in Algeria</label>
+                    <input type="text" id="target-audience" placeholder="E.g., Algerian youth 18-30, Professionals in Algiers">
+                </div>
+                
+                <div class="form-group">
+                    <label for="content-type">Content Type</label>
+                    <select id="content-type">
+                        <option value="">Select content type</option>
+                        <option value="social">Social Media Post</option>
+                        <option value="blog">Blog Article</option>
+                        <option value="email">Email Newsletter</option>
+                        <option value="ad">Advertisement</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content-topic">Content Topic/Goal</label>
+                    <input type="text" id="content-topic" placeholder="E.g., Promote new product, Share industry news">
+                </div>
+                
+                <button type="button" class="btn" id="generate-btn">Generate Content & Strategy</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Strategy Output Section -->
+<section class="strategy-output" id="strategy-results" style="display: none;">
+    <div class="container">
+        <h2 class="section-title">Tailored Strategies Based on the Algerian Market</h2>
+        
+        <div class="content-preview" id="generated-content">
+            <!-- AI-generated content will appear here -->
+        </div>
+        
+        <div class="strategy-card">
+            <h3><i class="fas fa-bullseye"></i> Optimal Posting Strategy</h3>
+            <div class="strategy-content" id="posting-strategy">
+                <!-- AI-generated posting strategy -->
+            </div>
+        </div>
+        
+        <div class="strategy-card">
+            <h3><i class="fas fa-hashtag"></i> Hashtag & Keyword Recommendations</h3>
+            <div class="strategy-content" id="hashtag-strategy">
+                <!-- AI-generated hashtag strategy -->
+            </div>
+        </div>
+        
+        <div class="strategy-card">
+            <h3><i class="fas fa-chart-line"></i> Performance Forecast</h3>
+            <div class="strategy-content" id="performance-strategy">
+                <!-- AI-generated performance tips -->
+            </div>
+        </div>
+        
+        <div class="strategy-card">
+            <h3><i class="fas fa-calendar-alt"></i> Content Calendar Suggestion</h3>
+            <div class="strategy-content" id="calendar-strategy">
+                <!-- AI-generated calendar -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <div class="container">
+        <h2 class="section-title">How Content Creation & AI Strategies Work</h2>
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-icon"><i class="fas fa-edit"></i></div>
+                <h3>Choose Content Type</h3>
+                <p>Select the content format you need - social media, blogs, emails or ads.</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-icon"><i class="fas fa-users"></i></div>
+                <h3>Define Your Audience</h3>
+                <p>Tell us about your Algerian target audience for personalized strategies.</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-icon"><i class="fas fa-magic"></i></div>
+                <h3>Generate Content</h3>
+                <p>AI creates draft content tailored to your needs and Algerian market.</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-icon"><i class="fas fa-chart-pie"></i></div>
+                <h3>Get Strategies</h3>
+                <p>Receive actionable strategies optimized for Algerian engagement.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Limitations Section -->
+<section class="limitations">
+    <div class="container">
+        <h2 class="section-title">Trial Limitations</h2>
+        <ul class="limitations-list">
+            <li>Create up to 5 pieces of content during your trial</li>
+            <li>Basic content templates (premium templates in paid plans)</li>
+            <li>Limited Algerian market data in trial version</li>
+            <li>Performance tracking limited to 7 days</li>
+            <li>No priority support during trial</li>
+        </ul>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Transform Your Content Strategy?</h2>
+        <p>Start your 5-day trial today and experience AI-driven content creation with Algerian market insights.</p>
+        <a href="/create-account" class="btn" style="background: white; color: #8B0000;">Start 5-Day Trial</a>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const generateBtn = document.getElementById('generate-btn');
+    const strategySection = document.getElementById('strategy-results');
+    
+    generateBtn.addEventListener('click', function() {
+        // Get form values
+        const businessType = document.getElementById('business-type').value;
+        const targetAudience = document.getElementById('target-audience').value;
+        const contentType = document.getElementById('content-type').value;
+        const contentTopic = document.getElementById('content-topic').value;
+        
+        if (!businessType || !targetAudience || !contentType || !contentTopic) {
+            alert("Please fill in all fields");
+            return;
+        }
+        
+        // Show loading state
+        generateBtn.disabled = true;
+        generateBtn.textContent = 'Generating...';
+        
+        // Simulate API call with timeout
+        setTimeout(function() {
+            // Generate content based on Algerian market
+            const algerianContent = generateAlgerianContent(businessType, targetAudience, contentType, contentTopic);
+            
+            // Display generated content
+            document.getElementById('generated-content').innerHTML = algerianContent.content;
+            
+            // Display strategies
+            document.getElementById('posting-strategy').innerHTML = algerianContent.postingStrategy;
+            document.getElementById('hashtag-strategy').innerHTML = algerianContent.hashtagStrategy;
+            document.getElementById('performance-strategy').innerHTML = algerianContent.performanceStrategy;
+            document.getElementById('calendar-strategy').innerHTML = algerianContent.calendarStrategy;
+            
+            // Show results section
+            strategySection.style.display = 'block';
+            strategySection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Reset button
+            generateBtn.disabled = false;
+            generateBtn.textContent = 'Generate Content & Strategy';
+        }, 2000);
+    });
+    
+    function generateAlgerianContent(businessType, audience, type, topic) {
+        // Algerian-specific content examples
+        const algerianExamples = {
+            'restaurant': {
+                'social': `<p>🍽️ Découvrez nos nouveaux plats traditionnels algériens avec une touche moderne!</p>
+                          <p>Parfait pour le Ramadan - commandez maintenant pour une expérience culinaire inoubliable.</p>
+                          <p>📍 Situé au cœur d'Alger #CuisineAlgérienne #Ramadan2024 #AlgerResto</p>`,
+                'postingStrategy': `<p>For restaurants in Algeria, optimal posting times are:</p>
+                                  <ul>
+                                      <li>During Ramadan: 5-6 PM (before Iftar) and 9-10 PM (after Iftar)</li>
+                                      <li>Regular days: 12-2 PM (lunch) and 7-9 PM (dinner)</li>
+                                  </ul>
+                                  <p>Focus on visual content showing your dishes and happy customers.</p>`,
+                'hashtagStrategy': `<p>Top Algerian food hashtags:</p>
+                                   <p>#AlgerianFood #TasteOfAlgeria #AlgerianCuisine #RamadanInAlgeria #AlgerResto #FoodAlger #AlgiersEats</p>`
+            },
+            'ecommerce': {
+                'social': `<p>🚀 Nouvelle collection maintenant disponible!</p>
+                          <p>Livraison rapide dans toute l'Algérie. Profitez de nos offres spéciales Ramadan.</p>
+                          <p>👉 Visitez notre site web [lien] #ShoppingAlgerie #EcommerceAlgerie #MadeInAlgeria</p>`,
+                'postingStrategy': `<p>For e-commerce in Algeria:</p>
+                                  <ul>
+                                      <li>Best times: 8-10 PM when online shopping peaks</li>
+                                      <li>Increase posts during Ramadan and before holidays</li>
+                                      <li>Use Instagram Stories for flash sales</li>
+                                  </ul>`,
+                'hashtagStrategy': `<p>Effective Algerian e-commerce hashtags:</p>
+                                  <p>#ShopAlgerian #AlgerianBusiness #AlgerianProducts #SupportLocalAlgeria #AlgerianEntrepreneur</p>`
+            }
+        };
+        
+        // Default content if no specific match
+        const defaultContent = {
+            'social': `<p>${topic} - Découvrez notre nouvelle offre spéciale pour la communauté algérienne!</p>
+                     <p>Parfait pour ${audience}. Contactez-nous pour plus d'informations.</p>
+                     <p>#Algeria #AlgerianBusiness #${businessType.replace(/\s+/g, '')}</p>`,
+            'postingStrategy': `<p>General Algerian market posting strategy:</p>
+                              <ul>
+                                  <li>Evenings (7-10 PM) get highest engagement</li>
+                                  <li>Weekdays perform better than weekends</li>
+                                  <li>Adjust for Ramadan timings when applicable</li>
+                              </ul>`,
+            'hashtagStrategy': `<p>Popular Algerian hashtags:</p>
+                              <p>#Algeria #Algerian #Alger #DZ #AlgerianBusiness #MadeInAlgeria #AlgerianEntrepreneur</p>`
+        };
+        
+        // Find matching content or use default
+        const businessKey = businessType.toLowerCase().includes('restaurant') ? 'restaurant' : 
+                          businessType.toLowerCase().includes('ecom') ? 'ecommerce' : null;
+        
+        const content = businessKey ? 
+                      (algerianExamples[businessKey][type] || defaultContent[type] || `<p>${topic} - Content for ${audience} in Algeria</p>`) :
+                      defaultContent[type] || `<p>${topic} - Content for ${audience} in Algeria</p>`;
+        
+        const postingStrategy = businessKey ? 
+                              (algerianExamples[businessKey].postingStrategy || defaultContent.postingStrategy) :
+                              defaultContent.postingStrategy;
+        
+        const hashtagStrategy = businessKey ? 
+                              (algerianExamples[businessKey].hashtagStrategy || defaultContent.hashtagStrategy) :
+                              defaultContent.hashtagStrategy;
+        
+        return {
+            content: content,
+            postingStrategy: postingStrategy,
+            hashtagStrategy: hashtagStrategy,
+            performanceStrategy: `<p>Based on similar Algerian businesses, this content is likely to:</p>
+                                <ul>
+                                    <li>Reach 2-3x more local audience with the right hashtags</li>
+                                    <li>Get 15-25% engagement rate if posted at optimal times</li>
+                                    <li>Convert better when including special offers for Algerian customers</li>
+                                </ul>`,
+            calendarStrategy: `<p>Suggested content calendar for Algerian audience:</p>
+                             <ul>
+                                 <li><strong>Today:</strong> Post this content with recommended hashtags</li>
+                                 <li><strong>3 days later:</strong> Follow up with related content</li>
+                                 <li><strong>1 week later:</strong> Repurpose this content as a Story or Reel</li>
+                             </ul>`
+        };
+    }
+});
+</script>
+{% endblock %}

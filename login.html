@@ -1,0 +1,196 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Login - Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        max-width: 500px;
+        margin: 60px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, #8B0000, #A52A2A);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+        color: #8B0000;
+        margin-bottom: 10px;
+    }
+
+    .login-header p {
+        color: #666;
+    }
+
+    .login-form .form-group {
+        margin-bottom: 20px;
+    }
+
+    .login-form label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .login-form input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    .login-form input:focus {
+        border-color: #8B0000;
+        box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+        outline: none;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 14px;
+        background-color: #8B0000;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .login-btn:hover {
+        background-color: #A52A2A;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 25px 0;
+        color: #999;
+    }
+
+    .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #eee;
+    }
+
+    .divider::before {
+        margin-right: 15px;
+    }
+
+    .divider::after {
+        margin-left: 15px;
+    }
+
+    .alternative-action {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .alternative-action a {
+        color: #8B0000;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+    .alternative-action a:hover {
+        color: #A52A2A;
+        text-decoration: underline;
+    }
+
+    .olive-decoration {
+        position: absolute;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    .olive-decoration.top-right {
+        top: -50px;
+        right: -50px;
+        transform: rotate(45deg);
+        font-size: 150px;
+        color: #8B0000;
+    }
+
+    .olive-decoration.bottom-left {
+        bottom: -50px;
+        left: -50px;
+        transform: rotate(-45deg);
+        font-size: 150px;
+        color: #8B0000;
+    }
+
+    @media (max-width: 768px) {
+        .login-container {
+            margin: 30px 20px;
+            padding: 30px 20px;
+        }
+
+        .olive-decoration {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <!-- Olive leaf decorations -->
+    <div class="olive-decoration top-right">
+        <i class="fas fa-leaf"></i>
+    </div>
+    <div class="olive-decoration bottom-left">
+        <i class="fas fa-leaf"></i>
+    </div>
+
+    <div class="login-header">
+        <h1>Welcome Back</h1>
+        <p>Sign in to access your Pelestia account</p>
+    </div>
+
+    <form class="login-form" method="POST" action="/login">
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <button type="submit" class="login-btn">Log In</button>
+
+        <div class="divider">or</div>
+
+        <div class="alternative-action">
+            <p>Don't have an account yet? 
+                <a href="/create-account">Create Account</a> or 
+                <a href="/marketing-quiz">Start Free Assessment</a>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}

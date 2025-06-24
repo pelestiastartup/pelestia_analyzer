@@ -1,0 +1,333 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Content & Brand Strategy | Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero-container {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 120px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: url("{{ url_for('static', filename='images/decorative-icon-2.png') }}") no-repeat;
+        background-position: right bottom;
+        background-size: 30%;
+        opacity: 0.1;
+        z-index: -1;
+    }
+    
+    .hero h1 {
+        font-size: 2.8em;
+        margin: 0 auto 20px;
+        max-width: 800px;
+        line-height: 1.2;
+        color: #8B0000;
+    }
+    
+    .hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto 40px;
+    }
+
+    /* Content Sections */
+    .content-section {
+        padding: 80px 20px;
+        position: relative;
+    }
+    
+    .content-section:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    
+    .section-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .section-title {
+        text-align: center;
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 50px;
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+    
+    .service-description {
+        font-size: 1.1em;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 40px;
+        text-align: center;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Features Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+    
+    .feature-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: #8B0000;
+    }
+    
+    .feature-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        font-size: 1.4em;
+    }
+    
+    .feature-card p {
+        color: #666;
+        line-height: 1.7;
+    }
+    
+    /* Benefits Section */
+    .benefits-list {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .benefit-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 25px;
+    }
+    
+    .benefit-icon {
+        flex-shrink: 0;
+        width: 50px;
+        height: 50px;
+        background-color: rgba(139, 0, 0, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+        color: #8B0000;
+        font-size: 1.2em;
+    }
+    
+    .benefit-content h4 {
+        color: #8B0000;
+        margin-bottom: 8px;
+        font-size: 1.2em;
+    }
+    
+    .benefit-content p {
+        color: #666;
+        line-height: 1.7;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+        color: white;
+    }
+    
+    .cta-section h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    
+    .cta-section p {
+        font-size: 1.1em;
+        max-width: 700px;
+        margin: 0 auto 30px;
+        opacity: 0.9;
+    }
+    
+    .cta-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: white;
+        color: #8B0000;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+    
+    .cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .hero {
+            padding: 80px 20px;
+        }
+        
+        .hero h1 {
+            font-size: 2em;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .benefit-item {
+            flex-direction: column;
+        }
+        
+        .benefit-icon {
+            margin-bottom: 15px;
+            margin-right: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-container">
+    <section class="hero">
+        <h1>Content & Brand Strategy</h1>
+        <p>Craft a compelling brand narrative and content strategy that resonates with your audience and drives business growth</p>
+        <a href="/marketing-quiz" class="btn">Start Free Assessment →</a>
+    </section>
+</div>
+
+<!-- Moved CTA Section to appear here -->
+<section class="cta-section">
+    <div class="section-container">
+        <h2>Try Our 5-Day Free Trial</h2>
+        <p>
+            Experience Pelestia's content and brand strategy tools with our 5-day free trial. 
+            Get AI-powered recommendations and start improving your brand messaging today.
+        </p>
+        <a href="/content-brand-strategy/trial-plan" class="cta-btn">Start Now</a>
+    </div>
+</section>
+
+<!-- Service Description Section -->
+<section class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">Service Overview</h2>
+        <p class="service-description">
+            A strong content strategy and clear brand positioning are critical to differentiating your business in today's competitive market. 
+            Our Content & Brand Strategy service provides you with the tools and guidance to create a cohesive, compelling brand narrative 
+            that resonates with your target audience. From content creation to brand development, Pelestia helps you craft messages that 
+            drive engagement and loyalty.
+        </p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Comprehensive Brand Audit</h3>
+                <p>Analyze your current brand positioning and identify areas for improvement with our detailed brand assessment tools.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Content Creation Tools</h3>
+                <p>Use advanced AI tools to create high-quality, engaging content tailored to your audience's preferences and needs.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Strategic Content Planning</h3>
+                <p>Develop a content calendar and strategy that aligns with your brand's objectives and marketing goals.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Brand Messaging Optimization</h3>
+                <p>Fine-tune your brand's messaging for consistency and impact across all channels and customer touchpoints.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">How This Benefits You</h2>
+        
+        <div class="benefits-list">
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="benefit-content">
+                    <h4>Strong Brand Identity</h4>
+                    <p>Build a brand identity that aligns with your target audience's values and needs, creating meaningful connections.</p>
+                </div>
+            </div>
+            
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-pen-fancy"></i>
+                </div>
+                <div class="benefit-content">
+                    <h4>Engaging Content</h4>
+                    <p>Create content that engages and converts, driving long-term customer loyalty and brand advocacy.</p>
+                </div>
+            </div>
+            
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <div class="benefit-content">
+                    <h4>Consistent Messaging</h4>
+                    <p>Ensure your brand messaging is consistent and effective across all platforms and customer interactions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

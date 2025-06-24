@@ -1,0 +1,347 @@
+﻿{% extends "base.html" %}
+
+{% block title %}About Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Reset margins and padding for consistent spacing */
+    .about-container {
+        width: 100%;
+        padding: 20px;
+        margin: 0;
+    }
+
+    /* Origin story section with coffee cup decoration */
+    .origin-story {
+        background-color: #f9f9f9;
+        padding: 40px;
+        border-radius: 10px;
+        margin: 40px 0;
+        position: relative;
+    }
+    
+    .origin-story:before {
+        content: "\f0f4"; /* Font Awesome coffee icon */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 60px;
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .origin-quote {
+        font-style: italic;
+        font-size: 1.2em;
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 20px;
+        color: #555;
+    }
+    
+    /* Section titles */
+    .section-title {
+        text-align: center;
+        margin: 60px 0 30px;
+        color: #8B0000;
+        font-size: 2em;
+    }
+    
+    /* Value proposition cards */
+    .value-props {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin: 50px 0;
+    }
+    
+    .value-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    
+    .value-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .value-icon {
+        font-size: 3em;
+        margin-bottom: 20px;
+        color: #8B0000;
+    }
+    
+    /* Highlight box */
+    .highlight-box {
+        background-color: #8B0000;
+        padding: 40px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        margin: 60px 0;
+    }
+    
+    /* Team profiles section */
+    .team-profiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        margin-top: 60px;
+    }
+    
+    .team-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+    
+    .team-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .team-icon {
+        height: 250px;
+        background-color: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    
+    /* Simplified teacher icon styling */
+    .teacher-icon {
+        font-size: 6em;
+        color: #8B0000;
+    }
+    
+    .team-details {
+        padding: 25px;
+    }
+    
+    .team-name {
+        color: #8B0000;
+        margin-bottom: 5px;
+        font-size: 1.3em;
+    }
+    
+    .team-title {
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 15px;
+        font-size: 0.9em;
+    }
+    
+    .team-bio {
+        color: #555;
+        line-height: 1.6;
+        font-size: 0.95em;
+    }
+    
+    /* Icon colors */
+    .founder-icon { 
+        font-size: 5em;
+        color: #8B0000; 
+    }
+    .tech-icon { 
+        font-size: 5em;
+        color: #800000; 
+    }
+    
+    /* Connect button */
+    .connect-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background-color: #8B0000;
+        color: white;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        margin: 60px auto 0;
+        text-align: center;
+        font-size: 1.1em;
+    }
+    
+    .connect-btn:hover {
+        background-color: #A52A2A;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .section-title {
+            font-size: 1.7em;
+            margin: 40px 0 20px;
+        }
+        
+        .origin-story {
+            padding: 30px 20px;
+        }
+        
+        .value-props {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .team-profiles {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .highlight-box {
+            padding: 30px 20px;
+            margin: 40px 0;
+        }
+
+        /* Adjust icon sizes for mobile */
+        .teacher-icon,
+        .founder-icon,
+        .tech-icon {
+            font-size: 4em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-container">
+    <h1 class="section-title">About Pelestia</h1>
+    
+    <div class="origin-story">
+        <p class="origin-quote">"Born over a cup of cappuccino in the university yard, our platform was created to transform data into actionable insights."</p>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto; color: #555;">
+            What began as a passionate discussion between three marketing students has evolved into a leading AI analytics platform. 
+            Today, we empower businesses worldwide to bridge academic theory with practical marketing solutions.
+        </p>
+    </div>
+    
+    <h2 class="section-title">Our Promise</h2>
+    <div class="value-props">
+        <div class="value-card">
+            <div class="value-icon"><i class="fas fa-book-open"></i></div>
+            <h3 style="color: #8B0000;">Academic Foundations</h3>
+            <p>We transform cutting-edge marketing theory into practical business applications.</p>
+        </div>
+        <div class="value-card">
+            <div class="value-icon"><i class="fas fa-chart-line"></i></div>
+            <h3 style="color: #8B0000;">AI-Powered Solutions</h3>
+            <p>Our tools leverage academic research to deliver intelligent marketing insights.</p>
+        </div>
+        <div class="value-card">
+            <div class="value-icon"><i class="fas fa-lightbulb"></i></div>
+            <h3 style="color: #8B0000;">Creative Integration</h3>
+            <p>We bridge the gap between classroom concepts and real-world marketing challenges.</p>
+        </div>
+    </div>
+    
+    <div class="highlight-box">
+        <h2 style="color: white;">From Classroom to Boardroom</h2>
+        <p style="max-width: 700px; margin: 20px auto; font-size: 1.1em;">
+            Pelestia combines academic excellence with marketing innovation to create tools that 
+            enhance strategy effectiveness and user experience for businesses worldwide.
+        </p>
+    </div>
+    
+    <h2 class="section-title">Our Inspiring Mentors</h2>
+    <div class="team-profiles">
+        <!-- Professor Youcef Zakaria Rhamani -->
+        <div class="team-card">
+            <div class="team-icon">
+                <i class="fas fa-chalkboard-teacher teacher-icon"></i>
+            </div>
+            <div class="team-details">
+                <h3 class="team-name">Professor Youcef Zakaria Rhamani</h3>
+                <p class="team-title">Management Professor</p>
+                <p class="team-bio">
+                    A guiding light for our team, Professor Rhamani has been instrumental in shaping our business approach. His deep knowledge of management principles and unwavering support helped transform our academic project into a viable business venture. His mentorship continues to inspire us to bridge theory with practice.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Professor Boudaoud Boumadien -->
+        <div class="team-card">
+            <div class="team-icon">
+                <i class="fas fa-chalkboard-teacher teacher-icon"></i>
+            </div>
+            <div class="team-details">
+                <h3 class="team-name">Professor Boudaoud Boumadien</h3>
+                <p class="team-title">Creative Marketing Professor</p>
+                <p class="team-bio">
+                    Our innovative marketing guru, Professor Boumadien's creative teaching methods and real-world insights have been invaluable. His expertise in cutting-edge marketing techniques and encouragement to think outside the box helped shape Pelestia's unique approach to marketing analytics.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <h2 class="section-title">The Student Visionaries</h2>
+    <div class="team-profiles">
+        <!-- Brahim Khouloud -->
+        <div class="team-card">
+            <div class="team-icon founder-icon"><i class="fas fa-user-graduate"></i></div>
+            <div class="team-details">
+                <h3 class="team-name">Brahim Khouloud</h3>
+                <p class="team-title">Co-Founder & CEO</p>
+                <p class="team-bio">
+                    A second-year Service Marketing Master's student, Brahim's idea was born from applying her academic research in artificial intelligence to marketing. She has always been creative in bridging academic concepts with practical solutions that serve businesses and improve marketing strategies.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Bentouati Amina Bouchra -->
+        <div class="team-card">
+            <div class="team-icon founder-icon"><i class="fas fa-laptop-code"></i></div>
+            <div class="team-details">
+                <h3 class="team-name">Bentouati Amina Bouchra</h3>
+                <p class="team-title">Co-Founder & CTO</p>
+                <p class="team-bio">
+                    A second-year Service Marketing Master's student, Amina's passion for merging academic knowledge with innovative marketing trends led her to create user-centric solutions. She aims to design intuitive user experiences that leverage technology for more effective marketing strategies.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Amiri Asmaa -->
+        <div class="team-card">
+            <div class="team-icon founder-icon"><i class="fas fa-bullhorn"></i></div>
+            <div class="team-details">
+                <h3 class="team-name">Amiri Asmaa</h3>
+                <p class="team-title">Co-Founder & CMO</p>
+                <p class="team-bio">
+                    A second-year Service Marketing Master's student, Asmaa has excelled academically in connecting theoretical concepts with practical applications. She is constantly striving to expand the impact of her marketing knowledge, turning it into innovative solutions that serve the market and help businesses enhance their marketing strategies.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <h2 class="section-title">Our Technical Expert</h2>
+    <div class="team-profiles">
+        <!-- Rafik Nedjam -->
+        <div class="team-card">
+            <div class="team-icon tech-icon"><i class="fas fa-robot"></i></div>
+            <div class="team-details">
+                <h3 class="team-name">Rafik Nedjam</h3>
+                <p class="team-title">AI Developer</p>
+                <p class="team-bio">
+                    A second-year Computer Science student with a strong interest in artificial intelligence, Rafik is passionate about exploring how AI is transforming the world. He enjoys learning about machine learning, data science, and intelligent systems. Committed to developing his skills and knowledge in computer science, he's building his future career in AI and tech innovation while helping bring Pelestia's vision to life.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <a href="/contact" class="connect-btn">Connect With Our Team</a>
+</div>
+{% endblock %}
+
+{% block footer_text %}Where Academic Insight Meets Marketing Innovation{% endblock %}

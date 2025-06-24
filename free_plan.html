@@ -1,0 +1,359 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Free Plan{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .free-plan-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .free-plan-hero::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: url("{{ url_for('static', filename='images/decorative-icon1.png') }}") no-repeat;
+        background-size: contain;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    .free-plan-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .free-plan-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto 40px;
+        position: relative;
+    }
+
+    /* Plan Content Section */
+    .plan-content {
+        padding: 60px 20px;
+        background-color: white;
+    }
+
+    .plan-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .plan-section {
+        margin-bottom: 50px;
+    }
+
+    .plan-section h2 {
+        color: #8B0000;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .plan-section h2::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: #8B0000;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    /* Services Cards Grid */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .service-card {
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 25px;
+        transition: all 0.3s ease;
+        border-left: 4px solid #8B0000;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        background: #fff;
+    }
+
+    .service-card h3 {
+        color: #8B0000;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .service-card h3 i {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    .service-card .plan-tag {
+        display: inline-block;
+        background: #8B0000;
+        color: white;
+        font-size: 0.7em;
+        padding: 3px 8px;
+        border-radius: 10px;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+
+    .service-card p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .service-features {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 15px;
+    }
+
+    .service-features li {
+        padding: 8px 0;
+        color: #555;
+        position: relative;
+        padding-left: 25px;
+    }
+
+    .service-features li::before {
+        content: '•';
+        color: #8B0000;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        font-size: 1.2em;
+    }
+
+    /* Limitations Section */
+    .limitations-card {
+        background: #fff8f8;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        border-left: 4px solid #d9534f;
+    }
+
+    .limitations-card h3 {
+        color: #d9534f;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .limitations-card h3 i {
+        margin-right: 10px;
+    }
+
+    /* CTA Section */
+    .plan-cta {
+        text-align: center;
+        padding: 60px 20px;
+        background-color: #f9f9f9;
+    }
+
+    .plan-cta h2 {
+        color: #8B0000;
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .plan-cta p {
+        color: #666;
+        font-size: 1.1em;
+        max-width: 600px;
+        margin: 0 auto 30px;
+    }
+
+    .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #8B0000;
+        color: white;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary:hover {
+        background: #A52A2A;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn-secondary {
+        display: inline-block;
+        padding: 12px 30px;
+        background: white;
+        color: #8B0000;
+        border: 2px solid #8B0000;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .btn-secondary:hover {
+        background: #f0f0f0;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .free-plan-hero {
+            padding: 80px 20px;
+        }
+        
+        .free-plan-hero h1 {
+            font-size: 2em;
+        }
+        
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn-primary, .btn-secondary {
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="free-plan-hero">
+    <div class="container">
+        <h1>Free Plan</h1>
+        <p>Get started with Pelestia's basic features designed to help you begin your digital marketing journey</p>
+    </div>
+</section>
+
+<section class="plan-content">
+    <div class="plan-container">
+        <div class="plan-section">
+            <h2>Free Plan Overview</h2>
+            <div class="feature-card">
+                <p>The Free Plan provides very basic access to essential features with strict limitations to help you get started. It's perfect for testing the platform before committing to a paid plan.</p>
+            </div>
+        </div>
+
+        <div class="plan-section">
+            <h2>Services Available</h2>
+            
+            <div class="services-grid">
+                <!-- Content Creation Card -->
+                <a href="/content-brand-strategy/free-plan" class="service-card">
+                    <h3><i class="fas fa-pen-fancy"></i> Content Creation <span class="plan-tag">Free Plan</span></h3>
+                    <p>Basic templates and tools to help you create marketing content</p>
+                    <ul class="service-features">
+                        <li>Basic content templates</li>
+                        <li>Limited editing options</li>
+                        <li>Simple formatting tools</li>
+                    </ul>
+                </a>
+                
+                <!-- Marketing Optimization Card -->
+                <a href="/ai-marketing-analytics/free-plan" class="service-card">
+                    <h3><i class="fas fa-chart-line"></i> Marketing Optimization <span class="plan-tag">Free Plan</span></h3>
+                    <p>Basic AI-driven suggestions to improve your marketing</p>
+                    <ul class="service-features">
+                        <li>Basic campaign suggestions</li>
+                        <li>1-2 optimizations/month</li>
+                        <li>Simple performance metrics</li>
+                    </ul>
+                </a>
+                
+                <!-- Customer Experience Card -->
+                <a href="/customer-experience/free-plan" class="service-card">
+                    <h3><i class="fas fa-users"></i> Customer Experience <span class="plan-tag">Free Plan</span></h3>
+                    <p>Basic tools to track and analyze customer interactions</p>
+                    <ul class="service-features">
+                        <li>5 customer interactions/month</li>
+                        <li>Basic feedback analysis</li>
+                        <li>Simple reporting</li>
+                    </ul>
+                </a>
+                
+                <!-- AI Consultation Card -->
+                <a href="/ai-consultation" class="service-card">
+                    <h3><i class="fas fa-robot"></i> AI Consultation</h3>
+                    <p>Limited access to our AI-powered business consultant</p>
+                    <ul class="service-features">
+                        <li>5 queries per month</li>
+                        <li>Basic recommendations</li>
+                        <li>Simple strategy suggestions</li>
+                    </ul>
+                </a>
+            </div>
+        </div>
+
+        <div class="plan-section">
+            <h2>Limitations</h2>
+            <div class="limitations-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Important Restrictions</h3>
+                <ul class="service-features">
+                    <li>No external integrations (CRM, social media, etc.)</li>
+                    <li>Limited access to Pelestia's advanced features</li>
+                    <li>No priority support</li>
+                    <li>Limited data retention</li>
+                    <li>Basic reporting only</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="plan-cta">
+    <div class="container">
+        <h2>Ready to Get Started?</h2>
+        <p>Sign up now to begin using Pelestia's Free Plan. Upgrade anytime to unlock more powerful features.</p>
+        <div class="cta-buttons">
+            <a href="/create-account" class="btn-primary">Create Free Account</a>
+            <a href="/plans" class="btn-secondary">Compare All Plans</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

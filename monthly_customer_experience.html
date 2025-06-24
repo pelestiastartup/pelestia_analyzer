@@ -1,0 +1,561 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Monthly Plan Customer Experience{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Dashboard Layout */
+    .dashboard-hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    }
+
+    .dashboard-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .dashboard-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        padding: 40px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .tool-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border-top: 4px solid #8B0000;
+        cursor: pointer;
+    }
+
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .tool-icon {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 15px;
+    }
+
+    .tool-card h3 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+
+    .tool-card p {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .open-tool-btn {
+        display: inline-block;
+        padding: 8px 20px;
+        background: #8B0000;
+        color: white;
+        border-radius: 20px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s;
+        font-size: 0.9em;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        z-index: 1000;
+        display: none;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+        z-index: 1001;
+        display: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        color: #8B0000;
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    /* Tool-specific styles */
+    .tool-form textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 1em;
+    }
+
+    .analyze-btn {
+        background: #8B0000;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1em;
+    }
+
+    .analyze-btn:hover {
+        background: #A52A2A;
+    }
+
+    .results-container {
+        margin-top: 30px;
+        display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .tools-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .modal-container {
+            width: 95%;
+            max-height: 85vh;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal functionality
+    const toolCards = document.querySelectorAll('.tool-card');
+    const modalOverlay = document.querySelector('.modal-overlay');
+    const modalContainer = document.querySelector('.modal-container');
+    const closeModalBtn = document.querySelector('.close-modal');
+    
+    // Open modal when tool card is clicked
+    toolCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const toolId = this.getAttribute('data-tool');
+            const modalContent = document.querySelector(`#${toolId}-content`);
+            
+            // Set modal content
+            document.querySelector('.modal-content').innerHTML = modalContent.innerHTML;
+            
+            // Show modal
+            modalOverlay.style.display = 'block';
+            modalContainer.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Initialize tool-specific JS
+            initToolJS(toolId);
+        });
+    });
+    
+    // Close modal
+    function closeModal() {
+        modalOverlay.style.display = 'none';
+        modalContainer.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    closeModalBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', closeModal);
+    
+    // Initialize tool-specific JavaScript
+    function initToolJS(toolId) {
+        if (toolId === 'sentiment-analyzer') {
+            // Sentiment analyzer specific JS
+            const analyzeBtn = document.querySelector('#analyze-sentiment');
+            if (analyzeBtn) {
+                analyzeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    analyzeSentiment();
+                });
+            }
+        }
+        // Add other tool initializations here
+    }
+    
+    // Example tool function
+    function analyzeSentiment() {
+        const text = document.querySelector('#feedback-text').value;
+        const analyzeBtn = document.querySelector('#analyze-sentiment');
+        const results = document.querySelector('#sentiment-results');
+        
+        if (!text.trim()) {
+            alert('Please enter some feedback to analyze');
+            return;
+        }
+        
+        // Show loading state
+        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = 'Analyzing...';
+        
+        // Simulate API call (replace with actual fetch to your Flask endpoint)
+        setTimeout(function() {
+            // Mock analysis results
+            const mockResults = {
+                sentiment: {
+                    positive: 65,
+                    neutral: 20,
+                    negative: 15
+                },
+                emotions: ['Satisfaction', 'Trust', 'Excitement'],
+                recommendation: "This feedback is largely positive. Consider thanking the customer and asking if they'd like to leave a public review."
+            };
+            
+            // Display results
+            results.innerHTML = `
+                <h3>Analysis Results</h3>
+                <div style="display: flex; justify-content: space-between; margin: 20px 0;">
+                    <div style="text-align: center; padding: 15px; background: rgba(0,128,0,0.1); border-radius: 8px; width: 30%;">
+                        <h4>Positive</h4>
+                        <p style="font-size: 1.5em; font-weight: bold;">${mockResults.sentiment.positive}%</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255,165,0,0.1); border-radius: 8px; width: 30%;">
+                        <h4>Neutral</h4>
+                        <p style="font-size: 1.5em; font-weight: bold;">${mockResults.sentiment.neutral}%</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px; width: 30%;">
+                        <h4>Negative</h4>
+                        <p style="font-size: 1.5em; font-weight: bold;">${mockResults.sentiment.negative}%</p>
+                    </div>
+                </div>
+                <h4>Detected Emotions:</h4>
+                <div style="margin-bottom: 20px;">
+                    ${mockResults.emotions.map(emotion => `<span style="display: inline-block; background: #f0f0f0; padding: 5px 15px; border-radius: 20px; margin-right: 10px; margin-bottom: 10px;">${emotion}</span>`).join('')}
+                </div>
+                <h4>Recommended Response:</h4>
+                <p style="background: #f9f9f9; padding: 15px; border-radius: 8px;">${mockResults.recommendation}</p>
+            `;
+            
+            results.style.display = 'block';
+            analyzeBtn.disabled = false;
+            analyzeBtn.textContent = 'Analyze Feedback';
+            
+            // Scroll to results
+            results.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 1500);
+    }
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="dashboard-hero">
+    <div class="container">
+        <h1>Customer Experience Suite</h1>
+        <p>Select a tool to analyze, optimize, and enhance your customer interactions — powered by AI & Algerian market intelligence.</p>
+        <div style="margin-top: 30px;">
+            <a href="#tools-section" class="open-tool-btn" style="margin-right: 15px;">Explore Tools</a>
+            <a href="/monthly-paid-plan" class="open-tool-btn" style="background: white; color: #8B0000; border: 1px solid #8B0000;">View Full Features</a>
+        </div>
+    </div>
+</section>
+
+<!-- Tools Grid -->
+<section id="tools-section" class="tools-grid">
+    <!-- Sentiment Analyzer -->
+    <div class="tool-card" data-tool="sentiment-analyzer">
+        <div class="tool-icon">
+            <i class="fas fa-language"></i>
+        </div>
+        <h3>Sentiment Analyzer</h3>
+        <p>Understand the emotional tone in customer feedback across Arabic, French, and English with cultural context awareness.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Journey Mapper -->
+    <div class="tool-card" data-tool="journey-mapper">
+        <div class="tool-icon">
+            <i class="fas fa-route"></i>
+        </div>
+        <h3>Journey Mapper</h3>
+        <p>Visualize customer paths and identify friction points across all touchpoints in their experience.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Persona Detector -->
+    <div class="tool-card" data-tool="persona-detector">
+        <div class="tool-icon">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <h3>Persona Detector</h3>
+        <p>Group customers into actionable profiles based on behavior patterns and preferences.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- AI Reply Generator -->
+    <div class="tool-card" data-tool="reply-generator">
+        <div class="tool-icon">
+            <i class="fas fa-robot"></i>
+        </div>
+        <h3>AI Reply Generator</h3>
+        <p>Create culturally adapted responses for customer feedback, reviews, and support tickets.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- CX Score Calculator -->
+    <div class="tool-card" data-tool="cx-score">
+        <div class="tool-icon">
+            <i class="fas fa-calculator"></i>
+        </div>
+        <h3>CX Score Calculator</h3>
+        <p>Get an AI-powered score of your overall customer experience quality with improvement areas.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Behavioral Alerts -->
+    <div class="tool-card" data-tool="behavioral-alerts">
+        <div class="tool-icon">
+            <i class="fas fa-bell"></i>
+        </div>
+        <h3>Behavioral Alerts</h3>
+        <p>Detect shifts in engagement, churn risks, and emerging pain points in real-time.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Strategy Builder -->
+    <div class="tool-card" data-tool="strategy-builder">
+        <div class="tool-icon">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <h3>Strategy Builder</h3>
+        <p>Get step-by-step recommendations for loyalty programs, recovery strategies, and retention.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Report Generator -->
+    <div class="tool-card" data-tool="report-generator">
+        <div class="tool-icon">
+            <i class="fas fa-file-export"></i>
+        </div>
+        <h3>Report Generator</h3>
+        <p>Create and export professional PDF/Excel reports for stakeholders and presentations.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+</section>
+
+<!-- Modal Structure -->
+<div class="modal-overlay"></div>
+<div class="modal-container">
+    <div class="modal-header">
+        <h2>Tool Title</h2>
+        <button class="close-modal">&times;</button>
+    </div>
+    <div class="modal-content">
+        <!-- Content will be injected here from the hidden templates -->
+    </div>
+</div>
+
+<!-- Hidden Tool Contents (will be injected into modal) -->
+<div id="sentiment-analyzer-content" style="display: none;">
+    <h3>Sentiment Analyzer</h3>
+    <p>Paste customer feedback in any language to analyze sentiment and emotional tone.</p>
+    
+    <form class="tool-form">
+        <textarea id="feedback-text" placeholder="Paste customer feedback here..."></textarea>
+        <div style="margin-bottom: 20px;">
+            <label>
+                <input type="checkbox" checked> Include Algerian dialect analysis
+            </label>
+        </div>
+        <button type="button" class="analyze-btn" id="analyze-sentiment">
+            Analyze Feedback
+        </button>
+    </form>
+    
+    <div class="results-container" id="sentiment-results">
+        <!-- Results will be inserted here -->
+    </div>
+</div>
+
+<div id="journey-mapper-content" style="display: none;">
+    <h3>Journey Mapper</h3>
+    <p>Describe your customer journey stages to visualize and optimize the experience.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Journey Stage 1:</strong></label>
+            <input type="text" placeholder="Stage name (e.g., Awareness)" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <textarea placeholder="Describe what happens at this stage..." style="min-height: 80px;"></textarea>
+        </div>
+        
+        <button type="button" class="analyze-btn" style="margin-right: 10px;">
+            Add Another Stage
+        </button>
+        <button type="button" class="analyze-btn">
+            Generate Journey Map
+        </button>
+    </form>
+</div>
+
+<div id="persona-detector-content" style="display: none;">
+    <h3>Persona Detector</h3>
+    <p>Upload customer data to identify distinct behavioral profiles and personas.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Upload Customer Data:</strong></label>
+            <input type="file" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Analyze Customer Data
+        </button>
+    </form>
+</div>
+
+<div id="reply-generator-content" style="display: none;">
+    <h3>AI Reply Generator</h3>
+    <p>Enter customer feedback to generate culturally appropriate responses.</p>
+    
+    <form class="tool-form">
+        <textarea placeholder="Paste customer feedback here..." style="min-height: 100px;"></textarea>
+        <div style="margin-bottom: 20px;">
+            <label>
+                <input type="checkbox" checked> Include Algerian cultural context
+            </label>
+        </div>
+        <button type="button" class="analyze-btn">
+            Generate Response
+        </button>
+    </form>
+</div>
+
+<div id="cx-score-content" style="display: none;">
+    <h3>CX Score Calculator</h3>
+    <p>Answer these questions to calculate your customer experience score.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Customer Satisfaction (1-10):</strong></label>
+            <input type="range" min="1" max="10" value="5" style="width: 100%; margin-bottom: 10px;">
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Calculate CX Score
+        </button>
+    </form>
+</div>
+
+<div id="behavioral-alerts-content" style="display: none;">
+    <h3>Behavioral Alerts</h3>
+    <p>Configure alerts for customer behavior changes and engagement patterns.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Alert Threshold:</strong></label>
+            <select style="width: 100%; padding: 10px; margin-bottom: 10px;">
+                <option>High Engagement Drop</option>
+                <option>Potential Churn Risk</option>
+                <option>Negative Feedback Spike</option>
+            </select>
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Set Up Alerts
+        </button>
+    </form>
+</div>
+
+<div id="strategy-builder-content" style="display: none;">
+    <h3>Strategy Builder</h3>
+    <p>Select your business goals to generate customized CX strategies.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Primary Goal:</strong></label>
+            <select style="width: 100%; padding: 10px; margin-bottom: 10px;">
+                <option>Increase Customer Retention</option>
+                <option>Improve Satisfaction Scores</option>
+                <option>Reduce Churn</option>
+                <option>Enhance Loyalty</option>
+            </select>
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Generate Strategy
+        </button>
+    </form>
+</div>
+
+<div id="report-generator-content" style="display: none;">
+    <h3>Report Generator</h3>
+    <p>Select the data you want to include in your customer experience report.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Report Type:</strong></label>
+            <select style="width: 100%; padding: 10px; margin-bottom: 10px;">
+                <option>Executive Summary</option>
+                <option>Detailed Analysis</option>
+                <option>Quarterly Review</option>
+            </select>
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Generate Report
+        </button>
+    </form>
+</div>
+{% endblock %}

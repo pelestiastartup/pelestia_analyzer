@@ -1,0 +1,213 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - E-commerce Optimization Trial{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .ecommerce-hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ecommerce-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+    
+    .ecommerce-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto 30px;
+    }
+    
+    /* Form Section */
+    .ecommerce-form {
+        padding: 60px 20px;
+        background-color: white;
+    }
+    
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+    }
+    
+    textarea.form-control {
+        min-height: 120px;
+    }
+    
+    .metric-info {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    .file-upload {
+        border: 2px dashed #ddd;
+        padding: 20px;
+        text-align: center;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-submit {
+        background: #8B0000;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1em;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .btn-submit:hover {
+        background: #A52A2A;
+    }
+    
+    /* Results Section */
+    .ecommerce-results {
+        padding: 60px 20px;
+        background-color: #f9f9f9;
+    }
+    
+    .results-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .recommendations {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        white-space: pre-line;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .ecommerce-hero {
+            padding: 60px 20px;
+        }
+        
+        .ecommerce-hero h1 {
+            font-size: 2em;
+        }
+        
+        .form-container {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="ecommerce-hero">
+    <div class="container">
+        <h1>E-commerce Optimization Trial</h1>
+        <p>Use AI to analyze your online store and get actionable recommendations to boost sales, improve conversions, and enhance customer experience.</p>
+    </div>
+</section>
+
+<section class="ecommerce-form">
+    <div class="container">
+        <div class="form-container">
+            <h2 style="text-align: center; color: #8B0000; margin-bottom: 30px;">Analyze Your Store</h2>
+            
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="store_type">What type of e-commerce store do you have?</label>
+                    <select class="form-control" id="store_type" name="store_type" required>
+                        <option value="">Select your store type</option>
+                        <option value="Fashion & Apparel">Fashion & Apparel</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Home & Garden">Home & Garden</option>
+                        <option value="Health & Beauty">Health & Beauty</option>
+                        <option value="Food & Beverage">Food & Beverage</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="primary_goal">What is your primary goal?</label>
+                    <select class="form-control" id="primary_goal" name="primary_goal" required>
+                        <option value="">Select your primary goal</option>
+                        <option value="Increase conversion rate">Increase conversion rate</option>
+                        <option value="Reduce cart abandonment">Reduce cart abandonment</option>
+                        <option value="Increase average order value">Increase average order value</option>
+                        <option value="Improve product discoverability">Improve product discoverability</option>
+                        <option value="Enhance customer retention">Enhance customer retention</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="current_metrics">Enter your current metrics (optional)</label>
+                    <textarea class="form-control" id="current_metrics" name="current_metrics" placeholder="Example: Conversion rate: 1.5%, Average order value: $45, Cart abandonment: 70%"></textarea>
+                    <div class="metric-info">Common e-commerce metrics: Conversion Rate, Average Order Value, Cart Abandonment Rate, Bounce Rate, Customer Acquisition Cost, Customer Lifetime Value</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="challenges">What are your main challenges?</label>
+                    <textarea class="form-control" id="challenges" name="challenges" placeholder="Example: High cart abandonment, low product visibility, difficulty attracting repeat customers" required></textarea>
+                </div>
+                
+                <div class="file-upload">
+                    <p>Or upload your metrics file (CSV or Excel)</p>
+                    <input type="file" name="metrics_file" id="metrics_file" accept=".csv,.xlsx,.xls">
+                    {% if file_error %}
+                        <p style="color: red;">{{ file_error }}</p>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn-submit">Analyze My Store</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% if recommendations or error %}
+<section class="ecommerce-results">
+    <div class="results-container">
+        <h2 style="text-align: center; color: #8B0000; margin-bottom: 30px;">Optimization Recommendations</h2>
+        
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        
+        {% if recommendations %}
+            <div class="recommendations">
+                {{ recommendations }}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

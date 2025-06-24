@@ -1,0 +1,719 @@
+﻿<!DOCTYPE html>
+<html lang="{{ current_locale }}" {% if is_rtl %}dir="rtl"{% endif %}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pelestia{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+    <style>
+        /* Hide Google Translate Banner */
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        } 
+        body {
+            top: 0px !important; 
+        }
+        /* Hide clear chat button while keeping functionality */
+        .clear-chat-btn {
+            display: none !important;
+        }
+        /* Add styles for the plans button */
+        .plans-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            color: #8B0000;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-left: 10px;
+            border: 2px solid #8B0000;
+            background-color: transparent;
+        }
+        .plans-btn:hover {
+            background-color: #f0f0f0;
+            color: #8B0000;
+        }
+        /* Sidebar background styles - 2x larger */
+        body {
+            position: relative;
+            min-height: 100vh;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100%;
+            background-image: url("{{ url_for('static', filename='images/sidebareicon1.png') }}");
+            background-repeat: no-repeat;
+            background-position: left center;
+            background-size: contain;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-image: url("{{ url_for('static', filename='images/sidebareicon2.png') }}");
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: contain;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        /* Adjust main content area to prevent overlap */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+        /* For mobile responsiveness - hide sidebars on small screens */
+        @media (max-width: 1024px) {
+            body::before,
+            body::after {
+                display: none;
+            }
+            main {
+                padding: 0 20px;
+            }
+        }
+
+        /* Hero Section */
+        .hero-container {
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: url('/static/images/decorative-icon1.png') no-repeat;
+            background-size: contain;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .brand-tagline {
+            font-size: 2.5em;
+            color: #8B0000;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .hero h1 {
+            font-size: 2.2em;
+            margin: 0 auto 20px;
+            max-width: 800px;
+            line-height: 1.2;
+            color: #222;
+        }
+        
+        .hero p {
+            font-size: 1.2em;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        /* Plan Highlights Section */
+        .plan-highlights {
+            padding: 60px 20px;
+            background-color: #f9f9f9;
+        }
+
+        .highlight-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .highlight-container h2 {
+            color: #8B0000;
+            font-size: 2em;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .highlight-container h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: #8B0000;
+            margin: 15px auto 0;
+        }
+
+        .highlight-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .highlight-card h3 {
+            color: #8B0000;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .highlight-card p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 60px 20px;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2em;
+            color: #8B0000;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: #8B0000;
+            margin: 15px auto 0;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: #8B0000;
+            opacity: 0.1;
+            border-radius: 50%;
+            transform: translate(50%, 50%);
+        }
+
+        .service-icon {
+            font-size: 2.5em;
+            color: #8B0000;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .service-content {
+            padding: 30px;
+        }
+
+        .service-content h3 {
+            color: #222;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .service-content p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .service-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #8B0000;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .service-link:hover {
+            background: #A52A2A;
+            transform: translateY(-2px);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-container h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .cta-container p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: white;
+            color: #8B0000;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .cta-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px;
+            }
+            
+            .brand-tagline {
+                font-size: 2em;
+            }
+            
+            .hero h1 {
+                font-size: 1.8em;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul id="main-nav">
+                <!-- Logo on the left -->
+                <li class="logo-container">
+                    <a href="/">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Pelestia Logo" class="logo">
+                    </a>
+                </li>
+                
+                <!-- Main navigation items -->
+                <li><a href="/">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" aria-expanded="false" aria-haspopup="true">
+                        Services <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-label="Services submenu">
+                        <li><a href="/ai-marketing-analytics"><i class="fas fa-chart-line"></i> AI-Driven Marketing & Analytics</a></li>
+                        <li><a href="/customer-experience"><i class="fas fa-users"></i> Customer Experience & Conversion Optimization</a></li>
+                        <li><a href="/content-brand-strategy"><i class="fas fa-pen-fancy"></i> Content & Brand Strategy</a></li>
+                        <li><a href="/ai-consultation"><i class="fas fa-robot"></i> AI-Powered Consultation & Automation</a></li>
+                        <li><a href="/ecommerce-solutions"><i class="fas fa-shopping-cart"></i> E-Commerce Solutions</a></li>
+                        <li><a href="/website-development"><i class="fas fa-laptop-code"></i> Website Development</a></li>
+                        <li><a href="/social-listening"><i class="fas fa-headphones"></i> Social Listening & Monitoring</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" aria-expanded="false" aria-haspopup="true">
+                        Company <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-label="Company submenu">
+                        <li><a href="/about"><i class="fas fa-coffee"></i> About Us</a></li>
+                        <li><a href="/contact"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                        <li><a href="/faq"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                        <li><a href="/careers"><i class="fas fa-laptop-code"></i> Work With Us</a></li>
+                    </ul>
+                </li>
+                <li><a href="/partnerships">Partners</a></li>
+                <li><a href="/plans" class="plans-btn">Plans</a></li>
+                
+                <!-- Right-aligned items -->
+                <li id="google_translate_element" style="margin-left: auto;"></li>
+
+                <li class="language-selector">
+                    <div class="language-dropdown">
+                        <button class="language-btn"><i class="fas fa-globe"></i></button>
+                        <ul class="language-menu">
+                            <li><a href="?lang=en"><span class="flag-icon">🇬🇧</span> EN</a></li>
+                            <li><a href="?lang=ar"><span class="flag-icon">🇸🇦</span> AR</a></li>
+                            <li><a href="?lang=fr"><span class="flag-icon">🇫🇷</span> FR</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="/marketing-quiz" class="btn">{% block quiz_button %}Start Free Assessment{% endblock %}</a></li>
+                <li><a href="/login" class="login-btn">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <div class="hero-container">
+            <section class="hero">
+                <div class="hero-content">
+                    <div class="brand-tagline">MONTHLY PLAN</div>
+                    <h1>Flexible Access to Advanced Features</h1>
+                    <p>The Monthly Paid Plan is for businesses that want regular access to Pelestia's advanced features on a monthly basis. It provides more flexibility than the free and trial plans.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Plan Highlights Section -->
+        <section class="plan-highlights">
+            <div class="highlight-container">
+                <h2>What's Included</h2>
+                <div class="highlight-card">
+                    <h3>Full Access, Monthly Flexibility</h3>
+                    <p>Get all the premium features of Pelestia with the flexibility of a monthly subscription. Perfect for businesses that want to scale their marketing efforts without long-term commitments.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services-section">
+            <div class="container">
+                <h2 class="section-title">Services Available</h2>
+                <div class="services-grid">
+                    <!-- Content Creation Tools -->
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-pen-fancy"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Content Creation Tools</h3>
+                            <p>Unlimited access to all templates, content creation tools, and AI-powered content generation with full customization options.</p>
+                            <a href="/monthly-paid-plan/content-creation" class="service-link">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Marketing Strategy -->
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Marketing Strategy Optimization</h3>
+                            <p>Full access to AI-driven marketing optimizations (up to 50 optimizations per month) with unlimited strategy improvements.</p>
+                            <a href="/Monthly-Paid-Plan/marketing-strategy" class="service-link">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Customer Experience -->
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Customer Experience Management</h3>
+                            <p>Advanced customer tracking, segmentation, behavior analysis, and real-time feedback collection tools.</p>
+                            <a href="/Monthly-Paid-Plan/customer-experience" class="service-link">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- AI Consultation -->
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>AI Consultation</h3>
+                            <p>Unlimited AI consultations with up to 100 queries per month and personalized recommendations.</p>
+                            <a href="/ai-consultation" class="service-link">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Reports & Dashboards -->
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Reports & Dashboards</h3>
+                            <p>Unlimited reports with advanced data analysis and customizable dashboards for real-time monitoring.</p>
+                            <a href="/Monthly-Paid-Plan/reports-dashboards" class="service-link">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Website Development -->
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Website Development</h3>
+                            <p>Custom website design and development services tailored to your business needs, from landing pages to complex web applications.</p>
+                            <a href="/website-development" class="service-link">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-container">
+                <h2>Ready to Get Started?</h2>
+                <p>Join thousands of businesses using Pelestia to transform their marketing strategies.</p>
+                <a href="/create-account" class="cta-btn">Sign Up Now</a>
+            </div>
+        </section>
+
+        <!-- Limitations Section -->
+        <section class="plan-highlights">
+            <div class="highlight-container">
+                <h2>Plan Limitations</h2>
+                <div class="highlight-card">
+                    <h3>What to Keep in Mind</h3>
+                    <p>This plan includes limited integrations (1-2 platforms) and standard support (no priority support). For unlimited integrations and priority support, consider our Yearly Plan.</p>
+                </div>
+            </div>
+        </section>
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="/about">About Us</a>
+            <a href="/faq">FAQ</a>
+            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/service-agreement">Service Agreement</a>
+            <a href="/contact">Contact Us</a>
+        </div>
+        <div class="footer-partners">
+            <h4>Strategic Partners</h4>
+            <div class="partner-logos">
+                {% for partner in partners[:5] if partners is defined %}
+                <img src="{{ url_for('static', filename='images/partners/' + partner.logos[0] + '.png') }}" 
+                     alt="{{ partner.name }}" class="partner-logo" style="height: 30px;">
+                {% endfor %}
+            </div>
+        </div>
+        <p class="copyright">&copy; 2025 Pelestia | {% block footer_text %}Empowering Businesses with AI-Driven Solutions{% endblock %}</p>
+    </footer>
+
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ar,fr', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            
+            if (mobileToggle && mainNav) {
+                mobileToggle.addEventListener('click', function() {
+                    mainNav.classList.toggle('show');
+                    this.setAttribute('aria-expanded', 
+                        this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+                });
+            }
+            
+            // Better dropdown handling
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const link = dropdown.querySelector('a[aria-expanded]');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                if (link && menu) {
+                    // Click handler
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const isExpanded = link.getAttribute('aria-expanded') === 'true';
+                        link.setAttribute('aria-expanded', !isExpanded);
+                        menu.classList.toggle('show');
+                        
+                        // Close other open dropdowns
+                        document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                            if (openMenu !== menu) {
+                                openMenu.classList.remove('show');
+                                openMenu.previousElementSibling.setAttribute('aria-expanded', 'false');
+                            }
+                        });
+                    });
+                    
+                    // Handle keyboard navigation
+                    link.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            link.click();
+                        }
+                    });
+                }
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                        menu.previousElementSibling.setAttribute('aria-expanded', 'false');
+                    });
+                }
+            });
+
+            // Initialize chat icon
+            const chatIcon = document.getElementById('chatIcon');
+            chatIcon.style.display = 'flex';
+        });
+
+        // Toggle between chat widget and icon
+        function toggleChat() {
+            const widget = document.getElementById('aiChatWidget');
+            const icon = document.getElementById('chatIcon');
+            
+            if (widget.style.display === 'none' || widget.style.display === '') {
+                widget.style.display = 'block';
+                icon.style.display = 'none';
+                document.getElementById('userInput').focus();
+            } else {
+                widget.style.display = 'none';
+                icon.style.display = 'flex';
+            }
+        }
+
+        // Send message function
+        function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const chatHistory = document.getElementById('chatHistory');
+            
+            if (userInput.value.trim() === '') return;
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user-message';
+            userMessage.textContent = userInput.value;
+            chatHistory.appendChild(userMessage);
+            
+            // Add typing indicator
+            const typing = document.createElement('div');
+            typing.className = 'typing-indicator';
+            typing.textContent = 'Pelestia AI is typing...';
+            chatHistory.appendChild(typing);
+            
+            // Scroll to bottom
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Send to server
+            fetch('/ask-ai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: userInput.value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove typing indicator
+                chatHistory.removeChild(typing);
+                
+                // Add AI response
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'message ai-message';
+                aiMessage.textContent = data.reply;
+                chatHistory.appendChild(aiMessage);
+                
+                // Scroll to bottom
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                chatHistory.removeChild(typing);
+                
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message ai-message';
+                errorMsg.style.color = '#d9534f';
+                errorMsg.textContent = 'Error: Could not get response';
+                chatHistory.appendChild(errorMsg);
+                
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            });
+            
+            userInput.value = '';
+        }
+
+        // Send on Enter key
+        document.getElementById('userInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

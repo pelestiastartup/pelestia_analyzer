@@ -1,0 +1,253 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Request Demo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .demo-section {
+        padding: 60px 20px;
+        background-color: #f9f9f9;
+        min-height: 100vh;
+    }
+
+    .demo-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    .demo-illustration {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .demo-illustration img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .demo-header {
+        margin-bottom: 30px;
+    }
+
+    .demo-header h2 {
+        font-size: 2.2em;
+        color: #8B0000;
+        margin-bottom: 15px;
+    }
+
+    .demo-header p {
+        color: #666;
+        font-size: 1.1em;
+    }
+
+    .demo-form {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #8B0000;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: white;
+    }
+
+    .checkbox-group {
+        margin-top: 10px;
+    }
+
+    .checkbox-item {
+        margin-bottom: 10px;
+    }
+
+    .checkbox-item input {
+        margin-right: 10px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #8B0000;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 100%;
+    }
+
+    .btn:hover {
+        background-color: #A52A2A;
+    }
+
+    .privacy-text {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 20px;
+    }
+
+    .privacy-text a {
+        color: #8B0000;
+        text-decoration: none;
+    }
+
+    .privacy-text a:hover {
+        text-decoration: underline;
+    }
+
+    .response-note {
+        font-size: 0.9em;
+        color: #888;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .demo-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .demo-illustration {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="demo-section">
+    <div class="demo-container">
+        <div class="demo-illustration">
+            <img src="{{ url_for('static', filename='images/demo-illustration.svg') }}" alt="Pelestia AI Services">
+        </div>
+        
+        <div class="demo-form">
+            <div class="demo-header">
+                <h2>Get Started with Pelestia AI's Customized Services</h2>
+                <p>Fill out the form below to request a demo or more information tailored to your business needs.</p>
+            </div>
+            
+            <form action="/submit-demo-request" method="POST">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Business Email</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Use official email for faster response" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="company">Company Name</label>
+                    <input type="text" id="company" name="company" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobTitle">Job Title</label>
+                    <input type="text" id="jobTitle" name="jobTitle" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employees">Number of Employees</label>
+                    <select id="employees" name="employees" class="form-select" required>
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="1-10">1-10</option>
+                        <option value="11-50">11-50</option>
+                        <option value="51-200">51-200</option>
+                        <option value="200+">200+</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>I need solutions for:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="marketResearch" name="solutions" value="Market Research & Competitor Insights">
+                            <label for="marketResearch">Market Research & Competitor Insights</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="brandReputation" name="solutions" value="Brand Reputation Management">
+                            <label for="brandReputation">Brand Reputation Management</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="marketingOptimization" name="solutions" value="Marketing Optimization">
+                            <label for="marketingOptimization">Marketing Optimization</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="customerExperience" name="solutions" value="Customer Experience & Care">
+                            <label for="customerExperience">Customer Experience & Care</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Additional Details (Optional)</label>
+                    <textarea id="message" name="message" class="form-control" rows="4" placeholder="Tell us more about your business needs or any additional details"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="privacy" name="privacy" required>
+                        <label for="privacy">I agree to Pelestia's <a href="/privacy-policy" target="_blank">Privacy Policy</a></label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">Request a Demo</button>
+                
+                <p class="response-note">
+                    Please note that it may take up to 48 hours for us to get back to you after you submit the form. 
+                    We appreciate your patience and will respond as soon as possible.
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

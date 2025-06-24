@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Your Marketing Strategy Results') }}{% endblock %}
+
+{% block quiz_button %}{{ _('Retake Quiz') }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #8B0000;
+        --secondary-color: #A52A2A;
+        --light-bg: #f9f9f9;
+        --dark-text: #333;
+        --light-text: #666;
+        --white: #fff;
+    }
+    
+    .results-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+    
+    .results-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .results-header h1 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-size: 2.2rem;
+    }
+    
+    .results-header p {
+        color: var(--light-text);
+        font-size: 1.1rem;
+    }
+    
+    .analysis-section, .recommendation-section {
+        background: var(--white);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        border: 1px solid #eee;
+    }
+    
+    .analysis-section h2, .recommendation-section h2 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 1.5rem;
+    }
+    
+    .analysis-content, .recommendation-content {
+        background: var(--light-bg);
+        padding: 20px;
+        border-radius: 5px;
+        border-left: 4px solid var(--primary-color);
+        margin-top: 15px;
+        line-height: 1.6;
+    }
+    
+    .final-message {
+        background: var(--white);
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        margin-top: 30px;
+        border: 1px solid #eee;
+    }
+    
+    .final-message h2 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        font-size: 1.8rem;
+    }
+    
+    .final-message p {
+        margin-bottom: 25px;
+        color: var(--light-text);
+        line-height: 1.6;
+        font-size: 1.1rem;
+    }
+    
+    .trial-btn {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 15px 30px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        margin-top: 15px;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .trial-btn:hover {
+        background-color: var(--secondary-color);
+    }
+    
+    .retake-btn {
+        display: inline-block;
+        background-color: var(--white);
+        color: var(--primary-color);
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        border: 2px solid var(--primary-color);
+        margin-top: 20px;
+        font-size: 1rem;
+    }
+    
+    .retake-btn:hover {
+        background-color: var(--primary-color);
+        color: var(--white);
+    }
+    
+    .actions-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+    
+    @media (max-width: 768px) {
+        .results-container {
+            padding: 15px;
+            margin: 20px auto;
+        }
+        
+        .analysis-section, .recommendation-section, .final-message {
+            padding: 20px;
+        }
+        
+        .results-header h1 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <div class="results-header">
+        <h1>{{ _('Your Marketing Strategy Results') }}</h1>
+        <p>{{ _("Here's your personalized assessment based on your answers") }}</p>
+    </div>
+    
+    <section class="analysis-section">
+        <h2>{{ _('Our Analysis:') }}</h2>
+        <div class="analysis-content">
+            {{ analysis_text }}
+        </div>
+    </section>
+    
+    <section class="recommendation-section">
+        <h2>{{ _('Our Recommendations:') }}</h2>
+        <div class="recommendation-content">
+            {{ recommendation_text }}
+        </div>
+    </section>
+    
+    <div class="final-message">
+        <h2>{{ _('Thanks for completing the quiz!') }}</h2>
+        <p>{{ _('Ready to implement these recommendations and take your business to the next level?') }}</p>
+        
+        <div class="actions-container">
+            <a href="/free-trial" class="trial-btn">{{ _('Start Your Free 5-Day Trial') }}</a>
+            <a href="/marketing-quiz" class="retake-btn">{{ _('Retake Assessment') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

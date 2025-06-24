@@ -1,0 +1,248 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Create Account{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Main Container */
+    .account-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+    }
+
+    /* Form Section */
+    .form-section {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .form-title {
+        color: #8B0000;
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .account-form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #FF6347;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.1);
+    }
+
+    .phone-input-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .country-code {
+        flex: 0 0 80px;
+    }
+
+    .phone-number {
+        flex: 1;
+    }
+
+    .btn-submit {
+        background: #FF6347;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+        background: #e55a3f;
+        transform: translateY(-2px);
+    }
+
+    /* Payment Section */
+    .payment-section {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .payment-title {
+        color: #8B0000;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .payment-options {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .payment-images {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .payment-image {
+        max-width: 150px;
+        height: auto;
+        object-fit: contain;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .account-container {
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .payment-images {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="account-container">
+    <!-- Form Section -->
+    <div class="form-section">
+        <h2 class="form-title">Create Your Account</h2>
+        <form class="account-form" method="POST" action="{{ url_for('routes.create_account') }}">
+            <!-- Personal Information -->
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Business Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Use official email for faster response" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <div class="phone-input-container">
+                    <select id="country_code" name="country_code" class="form-control country-code">
+                        <option value="+213">+213 (DZ)</option>
+                        <option value="+1">+1 (US)</option>
+                        <option value="+33">+33 (FR)</option>
+                        <option value="+44">+44 (UK)</option>
+                        <!-- Add more country codes as needed -->
+                    </select>
+                    <input type="tel" id="phone" name="phone" class="form-control phone-number" required>
+                </div>
+            </div>
+            
+            <!-- Company Information -->
+            <div class="form-group">
+                <label for="company">Company Name</label>
+                <input type="text" id="company" name="company" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="job_title">Job Title</label>
+                <input type="text" id="job_title" name="job_title" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="employees">Number of Employees</label>
+                <select id="employees" name="employees" class="form-control" required>
+                    <option value="">Select...</option>
+                    <option value="1-10">1-10</option>
+                    <option value="11-50">11-50</option>
+                    <option value="51-200">51-200</option>
+                    <option value="200+">200+</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-submit">Create Account</button>
+        </form>
+    </div>
+    
+    <!-- Payment Section -->
+    <div class="payment-section">
+        <h2 class="payment-title">Payment Options</h2>
+        <div class="payment-options">
+            <div class="payment-images">
+                <img src="{{ url_for('static', filename='images/payment-method-1.png') }}" alt="Payment Method 1" class="payment-image">
+                <img src="{{ url_for('static', filename='images/payment-method-2.png') }}" alt="Payment Method 2" class="payment-image">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Email validation
+        const emailInput = document.getElementById('email');
+        emailInput.addEventListener('blur', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(this.value)) {
+                this.setCustomValidity('Please enter a valid email address');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        // Phone number validation
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('blur', function() {
+            const phoneRegex = /^\d{8,15}$/;
+            if (!phoneRegex.test(this.value)) {
+                this.setCustomValidity('Please enter a valid phone number');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,818 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - AI Customer Support & Experience Insights{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section - Dual focus on responses and strategies */
+    .sentiment-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .sentiment-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+    
+    .sentiment-hero p {
+        font-size: 1.4em;
+        color: #555;
+        max-width: 800px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+    }
+    
+    .hero-cta-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: #8B0000;
+        color: white;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        font-size: 1.1em;
+        box-shadow: 0 4px 15px rgba(139, 0, 0, 0.2);
+    }
+    
+    .hero-cta-btn:hover {
+        background: #A52A2A;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(139, 0, 0, 0.3);
+    }
+
+    /* Main Content Sections */
+    .content-section {
+        padding: 80px 20px;
+    }
+    
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .section-title {
+        text-align: center;
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 40px;
+        font-weight: 600;
+    }
+    
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+    
+    /* Customer Support Tool Section */
+    .support-tool {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        margin-bottom: 40px;
+        border: 1px solid #eee;
+    }
+    
+    .tool-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .tool-header h3 {
+        font-size: 1.8em;
+        color: #333;
+        margin-bottom: 15px;
+    }
+    
+    .tool-header p {
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .input-area {
+        margin-bottom: 25px;
+    }
+    
+    .input-area textarea {
+        width: 100%;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        min-height: 150px;
+        font-family: inherit;
+        font-size: 1em;
+        line-height: 1.6;
+        resize: vertical;
+    }
+    
+    .analyze-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: #8B0000;
+        color: white;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1em;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    .analyze-btn:hover {
+        background: #A52A2A;
+        transform: translateY(-3px);
+    }
+    
+    /* Results Display - Dual Column Layout */
+    .results-container {
+        display: none;
+        margin-top: 40px;
+        animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .results-columns {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .response-column, .strategy-column {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    @media (max-width: 768px) {
+        .results-columns {
+            flex-direction: column;
+        }
+    }
+    
+    .result-card {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+    
+    .response-card {
+        border-left-color: #3498db;
+    }
+    
+    .strategy-card {
+        border-left-color: #2ecc71;
+    }
+    
+    .result-card h4 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+    }
+    
+    .result-card h4 i {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+    
+    .sentiment-display {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    .sentiment-label {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+    
+    .sentiment-value {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .positive-sentiment {
+        background-color: #2ecc71;
+    }
+
+    .negative-sentiment {
+    background-color: #e74c3c;
+}
+
+    .strong-negative-sentiment {
+    background-color: #c0392b;
+}
+    .neutral-sentiment {
+        background-color: #f39c12;
+    }
+    
+    .recommendation-content, .strategy-content {
+        line-height: 1.6;
+        color: #444;
+    }
+    
+    .copy-btn {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9em;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.2s;
+    }
+    
+    .copy-btn:hover {
+        background: #e9ecef;
+    }
+    
+    /* Algerian Market Tips */
+    .market-tip {
+        background: #fffaf0;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 3px solid #f1c40f;
+        margin-top: 15px;
+    }
+    
+    .market-tip h5 {
+        color: #8B0000;
+        margin-bottom: 5px;
+        font-size: 1.1em;
+    }
+    
+    /* How It Works Section */
+    .steps-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+    
+    .step-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    
+    .step-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .step-card i {
+        font-size: 3em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        display: block;
+    }
+    
+    .step-card h3 {
+        color: #222;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+    
+    .step-card p {
+        color: #666;
+        line-height: 1.6;
+    }
+    
+    /* Demo Examples Section */
+    .demo-section {
+        background: #f9f9f9;
+        padding: 60px 20px;
+    }
+    
+    .demo-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .demo-example {
+        flex: 1;
+        min-width: 300px;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .demo-example h4 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+    
+    .demo-before, .demo-after {
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    
+    .demo-before {
+        background: rgba(231, 76, 60, 0.1);
+        border-left: 3px solid #e74c3c;
+    }
+    
+    .demo-after {
+        background: rgba(46, 204, 113, 0.1);
+        border-left: 3px solid #2ecc71;
+    }
+    
+    /* Limitations Section */
+    .limitations {
+        background: #fff8f8;
+        padding: 40px;
+        border-radius: 10px;
+        margin-top: 40px;
+        border: 1px solid #ffebeb;
+    }
+    
+    .limitations h3 {
+        color: #8B0000;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .limitations ul {
+        list-style-type: none;
+        padding-left: 0;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .limitations li {
+        padding: 12px 0;
+        position: relative;
+        padding-left: 35px;
+        color: #666;
+    }
+    
+    .limitations li::before {
+        content: '⚠️';
+        position: absolute;
+        left: 0;
+        font-size: 1.2em;
+    }
+    
+    .limitations p.upgrade-text {
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+        color: #8B0000;
+    }
+    
+    /* CTA Section */
+    .sentiment-cta {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+    }
+    
+    .sentiment-cta h2 {
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+    
+    .sentiment-cta p {
+        font-size: 1.2em;
+        color: #555;
+        max-width: 700px;
+        margin: 0 auto 30px;
+    }
+    
+    .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .sentiment-hero {
+            padding: 80px 20px;
+        }
+        
+        .sentiment-hero h1 {
+            font-size: 2em;
+        }
+        
+        .sentiment-hero p {
+            font-size: 1.2em;
+        }
+        
+        .steps-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .demo-container {
+            flex-direction: column;
+        }
+        
+        .support-tool {
+            padding: 25px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="sentiment-hero">
+    <div class="container">
+        <h1>AI-Powered Support and Sentiment Insights for Better Customer Experience</h1>
+        <p>Start your trial to receive AI-driven recommendations for replying to customer comments and strategic insights to optimize your customer experience in Algeria.</p>
+        <a href="/create-account" class="hero-cta-btn">Start Your Trial Now</a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="content-container">
+        <h2 class="section-title">Improve Your Customer Support with Real-Time AI Recommendations & Long-Term Strategy Insights</h2>
+        
+        <div class="support-tool">
+            <div class="tool-header">
+                <h3>AI Customer Experience Analyzer</h3>
+                <p>Paste customer feedback to get instant response recommendations and long-term improvement strategies tailored for the Algerian market.</p>
+            </div>
+            
+            <div class="input-area">
+                <textarea id="feedback-input" placeholder="Example: 'I'm disappointed with the delayed delivery and poor packaging of my order.'"></textarea>
+            </div>
+            
+            <button id="analyze-btn" class="analyze-btn">Analyze Customer Feedback</button>
+            
+            <div id="results-container" class="results-container">
+                <div class="results-columns">
+                    <div class="response-column">
+                        <div class="result-card response-card">
+                            <h4><i class="fas fa-reply"></i> Immediate Response Recommendation</h4>
+                            <div id="sentiment-display" class="sentiment-display">
+    <span class="sentiment-label">Sentiment:</span>
+    <span id="sentiment-value" class="sentiment-value"></span>
+</div>
+                            <div id="recommendation-content" class="recommendation-content"></div>
+                            <button class="copy-btn" onclick="copyToClipboard('recommendation-content')">Copy Response</button>
+                            
+                            <div id="market-tip" class="market-tip" style="display: none;">
+                                <h5>Algerian Market Tip</h5>
+                                <div id="market-tip-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="strategy-column">
+                        <div class="result-card strategy-card">
+                            <h4><i class="fas fa-chart-line"></i> Long-Term Experience Strategy</h4>
+                            <div id="strategy-content" class="strategy-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">How Customer Support & Sentiment Insights Work Together</h2>
+        
+        <div class="steps-container">
+            <div class="step-card">
+                <i class="fas fa-comments"></i>
+                <h3>Collect Customer Feedback</h3>
+                <p>Gather reviews, chat messages, or social media comments from your Algerian customers.</p>
+            </div>
+            
+            <div class="step-card">
+                <i class="fas fa-brain"></i>
+                <h3>AI Analyzes Sentiment</h3>
+                <p>Our AI detects emotional tone and key concerns in Arabic, French, or English.</p>
+            </div>
+            
+            <div class="step-card">
+                <i class="fas fa-reply"></i>
+                <h3>Get Response Recommendations</h3>
+                <p>Receive culturally appropriate reply suggestions for immediate customer interactions.</p>
+            </div>
+            
+            <div class="step-card">
+                <i class="fas fa-lightbulb"></i>
+                <h3>Receive Strategic Insights</h3>
+                <p>Identify trends and get actionable strategies to improve overall customer experience.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="demo-section">
+    <div class="content-container">
+        <h2 class="section-title">AI Customer Experience Insights in Action</h2>
+        
+        <div class="demo-container">
+            <div class="demo-example">
+                <h4>Negative Feedback Example</h4>
+                <div class="demo-before">
+                    <p><strong>Customer Message:</strong> "The product arrived damaged and customer service hasn't responded to my emails!"</p>
+                </div>
+                <div class="demo-after">
+                    <p><strong>AI Response Recommendation:</strong> "We sincerely apologize for this experience. Please send your order number to [email] and we'll arrange an immediate replacement with expedited shipping."</p>
+                    <p><strong>Long-Term Strategy:</strong> Implement a 24-hour response guarantee for customer complaints and improve packaging quality checks.</p>
+                </div>
+            </div>
+            
+            <div class="demo-example">
+                <h4>Positive Feedback Example</h4>
+                <div class="demo-before">
+                    <p><strong>Customer Message:</strong> "Excellent service! The product exceeded my expectations and arrived early."</p>
+                </div>
+                <div class="demo-after">
+                    <p><strong>AI Response Recommendation:</strong> "Thank you for your kind words! We'd love if you could share your experience on [platform]. Here's a 15% discount code for your next purchase: THANKYOU15"</p>
+                    <p><strong>Long-Term Strategy:</strong> Create a loyalty program to reward repeat customers and encourage positive reviews.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="content-container">
+        <div class="limitations">
+            <h3>Trial Limitations</h3>
+            <ul>
+                <li>Limited to 5 customer feedback analyses per day</li>
+                <li>Basic sentiment analysis (no advanced emotional breakdown)</li>
+                <li>Generic recommendations (not industry-specific)</li>
+                <li>No historical data tracking or comparison</li>
+            </ul>
+            <p class="upgrade-text">Upgrade to unlock unlimited analyses, advanced insights, and industry-specific strategies!</p>
+        </div>
+    </div>
+</section>
+
+<section class="sentiment-cta">
+    <div class="container">
+        <h2>Ready to Transform Your Customer Experience?</h2>
+        <p>Start your free trial today and discover how AI can help you build stronger customer relationships in Algeria.</p>
+        <div class="cta-buttons">
+            <a href="/create-account" class="hero-cta-btn">Start 5-Day Free Trial</a>
+            <a href="/plans" class="secondary-btn">Compare All Plans</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const feedbackInput = document.getElementById('feedback-input');
+    const resultsContainer = document.getElementById('results-container');
+    const sentimentValue = document.getElementById('sentiment-value');
+    const sentimentDisplay = document.getElementById('sentiment-display');
+    const recommendationContent = document.getElementById('recommendation-content');
+    const strategyContent = document.getElementById('strategy-content');
+    const marketTip = document.getElementById('market-tip');
+    const marketTipContent = document.getElementById('market-tip-content');
+    
+    analyzeBtn.addEventListener('click', function() {
+        const text = feedbackInput.value.trim();
+        
+        if (!text) {
+            alert('Please enter customer feedback to analyze');
+            return;
+        }
+        
+        // Show loading state
+        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = 'Analyzing...';
+        
+        // Simulate API call
+        setTimeout(function() {
+            const simulatedResponse = simulateSentimentAnalysis(text);
+            
+            // Display sentiment
+            sentimentValue.textContent = simulatedResponse.sentiment;
+            sentimentValue.className = 'sentiment-value ' + simulatedResponse.sentimentClass;
+            sentimentDisplay.style.backgroundColor = simulatedResponse.sentimentColor;
+            
+            // Display recommendations
+            recommendationContent.innerHTML = simulatedResponse.recommendation;
+            
+            // Display strategy
+            strategyContent.innerHTML = simulatedResponse.strategy;
+            
+            // Display Algerian market tip if relevant
+            if (simulatedResponse.marketTip) {
+                marketTip.style.display = 'block';
+                marketTipContent.innerHTML = simulatedResponse.marketTip;
+            } else {
+                marketTip.style.display = 'none';
+            }
+            
+            // Show results
+            resultsContainer.style.display = 'block';
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            // Reset button
+            analyzeBtn.disabled = false;
+            analyzeBtn.textContent = 'Analyze Customer Feedback';
+        }, 1500);
+    });
+    
+function simulateSentimentAnalysis(text) {
+    // Enhanced sentiment detection with more positive words and phrases
+    const positiveWords = [
+        'happy', 'great', 'excellent', 'amazing', 'love', 'thank', 
+        'شكرا', 'merci', 'best', 'perfect', 'good', 'nice', 'beautiful',
+        'pretty', 'جميل', 'joli', 'beau', 'حسن', 'رائع', 'fantastique',
+        'wonderful', 'superb', 'impressive', 'satisfied', 'recommend'
+    ];
+    
+    // Convert text to lowercase for case-insensitive matching
+    const lowerText = text.toLowerCase();
+    
+    // Check for strong negative phrases first
+    const strongNegativePhrases = [
+        'so ugly', 'very bad', 'extremely bad', 'worst ever', 'never again',
+        'complete waste', 'absolute garbage', 'très mauvais', 'très laid',
+        'سيء جدا', 'قبيح جدا', 'أسوأ شيء', 'not good', 'poor quality'
+    ];
+    
+    // Check for any negative words (even as substrings)
+    const negativeWords = [
+        'angry', 'disappointed', 'bad', 'terrible', 'unacceptable', 'complaint',
+        'غاضب', 'mécontent', 'awful', 'hate', 'disgusting', 'horrible', 'ugly',
+        'rubbish', 'garbage', 'waste', 'شنيع', 'مقزز', 'فظيع', 'dégoutant', 'nul'
+    ];
+    
+    const hasNegativeWord = negativeWords.some(word => 
+        lowerText.includes(word)
+    );
+    
+    const hasStrongNegative = strongNegativePhrases.some(phrase => 
+        lowerText.includes(phrase)
+    );
+    
+    // Check for positive words and phrases
+    const positivePhrases = [
+        'very good', 'extremely happy', 'highly recommend', 'love it', 
+        'great quality', 'excellent service', 'très bon', 'جيد جدا', 
+        'رائع جدا', 'perfect fit', 'beautiful design'
+    ];
+    
+    const hasPositiveWord = positiveWords.some(word => 
+        lowerText.includes(word)
+    );
+    
+    const hasStrongPositive = positivePhrases.some(phrase => 
+        lowerText.includes(phrase)
+    );
+    
+    let sentiment, sentimentClass, sentimentColor, recommendation, strategy, marketTip = null;
+    
+    if (hasStrongNegative) {
+        sentiment = 'Strongly Negative';
+        sentimentClass = 'strong-negative-sentiment';
+        sentimentColor = 'rgba(192, 57, 43, 0.1)';
+        
+        recommendation = `"We are truly sorry to hear about your extremely negative experience. This is completely unacceptable and not the standard we uphold. Please contact our manager directly at manager@example.com or call +213 XXX XXX XXX. We will personally ensure this is resolved immediately and compensate you for your trouble."`;
+        
+        strategy = `<ul>
+            <li><strong>Urgent escalation:</strong> Implement a protocol for immediately escalating strong negative feedback to senior management</li>
+            <li><strong>Root cause analysis:</strong> Conduct a thorough investigation into what caused this failure</li>
+            <li><strong>Staff retraining:</strong> Mandatory retraining for all customer-facing staff</li>
+            <li><strong>Compensation policy:</strong> Create a standard compensation policy for severe service failures</li>
+        </ul>`;
+    }
+    else if (hasNegativeWord) {
+        sentiment = 'Negative';
+        sentimentClass = 'negative-sentiment';
+        sentimentColor = 'rgba(231, 76, 60, 0.1)';
+        
+        recommendation = `"We sincerely apologize for your disappointing experience. Your feedback is important to us. Please contact us directly at support@example.com with your order number so we can make this right immediately. We value your business and will do everything we can to resolve this issue."`;
+        
+        strategy = `<ul>
+            <li><strong>Address systemic issues:</strong> Identify the root cause of this complaint</li>
+            <li><strong>Improve processes:</strong> Implement quality checks to prevent similar issues</li>
+            <li><strong>Train staff:</strong> Provide additional customer service training for handling complaints</li>
+            <li><strong>Follow-up protocol:</strong> Create a system to ensure resolution and customer satisfaction</li>
+        </ul>`;
+    }
+    else if (hasStrongPositive) {
+        sentiment = 'Strongly Positive';
+        sentimentClass = 'positive-sentiment';
+        sentimentColor = 'rgba(46, 204, 113, 0.1)';
+        
+        recommendation = `"We're absolutely thrilled to hear about your wonderful experience! Thank you for your glowing feedback. As a token of our appreciation, please enjoy this 15% discount code for your next purchase: LOVEIT15. We'd be honored if you could share your experience on our social media pages!"`;
+        
+        strategy = `<ul>
+            <li><strong>Highlight success:</strong> Feature this feedback prominently on your website and marketing materials</li>
+            <li><strong>Reward loyalty:</strong> Consider offering this customer a special loyalty discount</li>
+            <li><strong>Replicate excellence:</strong> Identify what created this exceptional experience and standardize it</li>
+        </ul>`;
+    }
+    else if (hasPositiveWord) {
+        sentiment = 'Positive';
+        sentimentClass = 'positive-sentiment';
+        sentimentColor = 'rgba(46, 204, 113, 0.1)';
+        
+        recommendation = `"We're thrilled to hear about your positive experience! Thank you for your kind words. We'd love if you could share your feedback on our Facebook page or Google reviews. As a token of our appreciation, here's a 10% discount code for your next purchase: HAPPY10."`;
+        
+        strategy = `<ul>
+            <li><strong>Leverage positive feedback:</strong> Feature these reviews on your website and social media</li>
+            <li><strong>Reward loyal customers:</strong> Consider implementing a referral program</li>
+            <li><strong>Identify success factors:</strong> Analyze what made this experience positive to replicate it</li>
+        </ul>`;
+    }
+    else {
+        sentiment = 'Neutral';
+        sentimentClass = 'neutral-sentiment';
+        sentimentColor = 'rgba(241, 196, 15, 0.1)';
+        
+        recommendation = `"Thank you for your feedback. We appreciate you taking the time to share your thoughts. If there's anything specific we can improve or if you have any questions, please don't hesitate to reach out to our team at support@example.com."`;
+        
+        strategy = `<ul>
+            <li><strong>Engage for more feedback:</strong> Send a follow-up to understand their experience better</li>
+            <li><strong>Monitor trends:</strong> Track if neutral feedback becomes a pattern</li>
+            <li><strong>Improve communication:</strong> Ensure your messaging clearly sets proper expectations</li>
+        </ul>`;
+    }
+    
+    // Add Algerian market tips for clothing/fashion
+    if (lowerText.includes('dress') || 
+        lowerText.includes('robe') || 
+        lowerText.includes('فستان') ||
+        lowerText.includes('clothing') || 
+        lowerText.includes('vetement') || 
+        lowerText.includes('ملابس')) {
+        strategy += `<li><strong>Fashion insights:</strong> Consider showcasing your products in Algerian cultural contexts</li>`;
+        marketTip = "Algerian customers appreciate seeing clothing modeled in local settings. Consider using Algerian models in your product photos.";
+    }
+    
+    // Add Algerian market tips for positive fashion feedback
+    if ((sentiment === 'Positive' || sentiment === 'Strongly Positive') && 
+        (lowerText.includes('dress') || lowerText.includes('robe') || lowerText.includes('فستان'))) {
+        strategy += `<li><strong>User-generated content:</strong> Ask satisfied customers for photos wearing your products</li>`;
+        marketTip = "Algerian fashion customers trust peer recommendations. Consider creating a hashtag campaign for customers to share photos of themselves wearing your products.";
+    }
+    
+    return {
+        sentiment: sentiment,
+        sentimentClass: sentimentClass,
+        sentimentColor: sentimentColor,
+        recommendation: recommendation,
+        strategy: strategy,
+        marketTip: marketTip
+    };
+}
+});
+
+function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    const range = document.createRange();
+    range.selectNode(element);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    
+    // Show copied notification
+    const originalText = event.target.textContent;
+    event.target.textContent = 'Copied!';
+    setTimeout(() => {
+        event.target.textContent = originalText;
+    }, 2000);
+}
+</script>
+{% endblock %}

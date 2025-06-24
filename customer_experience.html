@@ -1,0 +1,458 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Customer Experience & Conversion Optimization | Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .service-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: url("{{ url_for('static', filename='images/decorative-icon-2.png') }}") no-repeat;
+        background-size: contain;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .service-hero h1 {
+        font-size: 2.8em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .service-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto 40px;
+        position: relative;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #8B0000;
+        color: white;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+    
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        background: #A52A2A;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+        color: white;
+        margin-bottom: 50px;
+    }
+    
+    .cta-section h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    
+    .cta-section p {
+        max-width: 700px;
+        margin: 0 auto 30px;
+        font-size: 1.1em;
+        opacity: 0.9;
+    }
+    
+    .cta-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: white;
+        color: #8B0000;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Content Section */
+    .service-content {
+        padding: 80px 20px;
+        background-color: white;
+        position: relative;
+    }
+    
+    .service-content::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 300px;
+        height: 300px;
+        background: url("{{ url_for('static', filename='images/decorative-icon-2.png') }}") no-repeat;
+        background-size: contain;
+        opacity: 0.05;
+        z-index: 0;
+    }
+    
+    .service-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 50px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .service-description {
+        background-color: #f9f9f9;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+    }
+    
+    .service-description h2 {
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-size: 2em;
+    }
+    
+    .service-description p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+    
+    /* Benefits Section */
+    .benefits-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .benefit-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-top: 4px solid #8B0000;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .benefit-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    
+    .benefit-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .benefit-card h3 i {
+        font-size: 1.2em;
+    }
+    
+    .benefit-card p {
+        color: #666;
+        line-height: 1.6;
+    }
+    
+    /* What You Get Section */
+    .features-section {
+        margin-top: 60px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .features-section h2 {
+        text-align: center;
+        color: #8B0000;
+        margin-bottom: 40px;
+        font-size: 2em;
+        position: relative;
+    }
+    
+    .features-section h2::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+    }
+    
+    .feature-item {
+        padding: 25px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        border-left: 4px solid #8B0000;
+    }
+    
+    .feature-item h3 {
+        color: #222;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .feature-item h3 i {
+        color: #8B0000;
+    }
+    
+    /* Form Section */
+    .form-section {
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin-top: 40px;
+    }
+    
+    .form-section h2 {
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+    }
+    
+    .form-control:focus {
+        border-color: #8B0000;
+        box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+    }
+    
+    .btn-primary {
+        background-color: #8B0000;
+        border-color: #8B0000;
+        padding: 10px 25px;
+        border-radius: 30px;
+    }
+    
+    .btn-primary:hover {
+        background-color: #A52A2A;
+        border-color: #A52A2A;
+    }
+    
+    .accordion-item {
+        margin-bottom: 15px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+    }
+    
+    .accordion-button {
+        background-color: #f9f9f9;
+        color: #8B0000;
+        font-weight: bold;
+    }
+    
+    .accordion-button:not(.collapsed) {
+        background-color: #f9f9f9;
+        color: #8B0000;
+    }
+    
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: transparent;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .service-hero {
+            padding: 80px 20px;
+        }
+        
+        .service-hero h1 {
+            font-size: 2em;
+        }
+        
+        .service-hero::before {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .service-description {
+            padding: 30px 20px;
+        }
+        
+        .benefits-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="service-hero">
+    <div class="container">
+        <h1>Customer Experience & Conversion Optimization</h1>
+        <p>Transform customer interactions into growth opportunities with our AI-powered solutions</p>
+        <a href="#service-details" class="btn">Explore Features →</a>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Transform Your Customer Experience?</h2>
+        <p>Try our 5-day free trial with tailored features to improve your customer experience and optimize conversions.</p>
+        <a href="/customer-sentiment/trial-plan" class="cta-btn">Start Now</a>
+    </div>
+</section>
+
+<!-- Main Content Section -->
+<section class="service-content" id="service-details">
+    <div class="service-container">
+        <div class="service-description">
+            <h2>Service Description</h2>
+            <p>At Pelestia, we believe that customer experience is the key to business growth. Our Customer Experience & Conversion Optimization tools are designed to help you enhance every interaction with your customers, ensuring they have a seamless and enjoyable experience. From personalized recommendations to real-time feedback analysis, we make it easy to boost your customer satisfaction and drive conversions.</p>
+            
+            <div class="features-section">
+                <h2>What You Get</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h3><i class="fas fa-chart-bar"></i> Behavioral Analytics</h3>
+                        <p>Understand how your customers interact with your website, products, and marketing efforts.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3><i class="fas fa-funnel-dollar"></i> Conversion Funnel Optimization</h3>
+                        <p>Track your customer's journey and identify bottlenecks in the sales process.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3><i class="fas fa-user-tag"></i> Personalized Content</h3>
+                        <p>Deliver tailored content based on user preferences and behaviors to enhance engagement.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3><i class="fas fa-comment-dots"></i> Real-Time Feedback</h3>
+                        <p>Collect and analyze customer feedback to make immediate adjustments to your strategy.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="benefits-section">
+                <div class="benefit-card">
+                    <h3><i class="fas fa-user-shield"></i> Increased Retention</h3>
+                    <p>Increase customer retention by providing a better experience that aligns with their needs.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3><i class="fas fa-tachometer-alt"></i> Optimized Funnels</h3>
+                    <p>Optimize conversion funnels to ensure you don't lose potential customers at key touchpoints.</p>
+                </div>
+                <div class="benefit-card">
+                    <h3><i class="fas fa-chart-line"></i> Boosted Sales</h3>
+                    <p>Boost sales by delivering personalized content that resonates with each customer.</p>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Analyze Your Customer Experience</h2>
+                <p class="mb-4">Enter details about your current customer interactions to receive personalized recommendations.</p>
+
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
+                <form method="POST">
+                    <div class="form-group mb-4">
+                        <label for="website_experience" class="form-label">
+                            Describe your website experience:
+                        </label>
+                        <textarea class="form-control" id="website_experience" name="website_experience" rows="3" 
+                                  placeholder="How do customers interact with your website? Any pain points?">{{ form_data.website_experience if form_data }}</textarea>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="customer_feedback" class="form-label">
+                            Recent customer feedback or reviews:
+                        </label>
+                        <textarea class="form-control" id="customer_feedback" name="customer_feedback" rows="3"
+                                  placeholder="Paste recent customer feedback or reviews">{{ form_data.customer_feedback if form_data }}</textarea>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="support_metrics" class="form-label">
+                            Customer support metrics (if available):
+                        </label>
+                        <textarea class="form-control" id="support_metrics" name="support_metrics" rows="3"
+                                  placeholder="Response times, resolution rates, customer satisfaction scores">{{ form_data.support_metrics if form_data }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Get Recommendations <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                {% if recommendations %}
+                    <div class="mt-5">
+                        <h2>Your Personalized Recommendations</h2>
+                        <div class="accordion" id="recommendationsAccordion">
+                            {% for rec in recommendations %}
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="heading{{ loop.index }}">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#collapse{{ loop.index }}" aria-expanded="true" 
+                                            aria-controls="collapse{{ loop.index }}">
+                                        {{ rec.title }}
+                                    </button>
+                                </h3>
+                                <div id="collapse{{ loop.index }}" class="accordion-collapse collapse show" 
+                                     aria-labelledby="heading{{ loop.index }}" data-bs-parent="#recommendationsAccordion">
+                                    <div class="accordion-body">
+                                        {{ rec.description }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

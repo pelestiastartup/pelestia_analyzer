@@ -1,0 +1,453 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Yearly Paid Plan{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero-container {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: url("{{ url_for('static', filename='images/decorative-icon1.png') }}") no-repeat;
+        background-size: contain;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    .hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+    
+    .hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto 30px;
+    }
+
+    .price-tag {
+        background-color: #8B0000;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 30px;
+        display: inline-block;
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .price-period {
+        font-size: 0.8em;
+        color: #f0f0f0;
+    }
+
+    .highlight-badge {
+        background-color: #8B0000;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 20px;
+        font-size: 0.9em;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .savings-text {
+        color: #8B0000;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    /* Services Section */
+    .services-section {
+        padding: 80px 20px;
+        background-color: white;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .service-card {
+        background: #f9f9f9;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .service-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background-color: #8B0000;
+        opacity: 0.05;
+        border-radius: 50%;
+        transform: translate(30%, 30%);
+    }
+
+    .service-icon {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+
+    .service-card h3 {
+        color: #222;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+
+    .service-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .service-link {
+        display: inline-flex;
+        align-items: center;
+        color: #8B0000;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .service-link:hover {
+        color: #A52A2A;
+        transform: translateX(5px);
+    }
+
+    .service-link i {
+        margin-left: 5px;
+    }
+
+    /* Benefits Section */
+    .benefits-section {
+        padding: 80px 20px;
+        background-color: #f9f9f9;
+    }
+
+    .benefits-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+    }
+
+    .benefit-item {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+    }
+
+    .benefit-item h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .benefit-item h3::before {
+        content: '✓';
+        color: #8B0000;
+        font-weight: bold;
+    }
+
+    .benefit-item p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 60px 20px;
+        text-align: center;
+        background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+        color: white;
+    }
+
+    .cta-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .cta-section h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .cta-section p {
+        font-size: 1.1em;
+        margin-bottom: 30px;
+        opacity: 0.9;
+    }
+
+    .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .cta-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .cta-btn.primary {
+        background: white;
+        color: #8B0000;
+    }
+
+    .cta-btn.primary:hover {
+        background: #f0f0f0;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .cta-btn.secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .cta-btn.secondary:hover {
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-3px);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .hero {
+            padding: 80px 20px;
+        }
+        
+        .hero h1 {
+            font-size: 2em;
+        }
+        
+        .price-tag {
+            font-size: 1.2em;
+            padding: 10px 20px;
+        }
+        
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .cta-btn {
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-container">
+    <section class="hero">
+        <div class="highlight-badge">Most Popular Plan</div>
+        <h1>Yearly Paid Plan</h1>
+        <p>Get unlimited access to all Pelestia features at the best value with our annual subscription.</p>
+        <div class="price-tag">50,000 DZD <span class="price-period">/year</span></div>
+        <p class="savings-text">Save 16% compared to monthly billing</p>
+    </section>
+</div>
+
+<section class="services-section">
+    <div class="container">
+        <h2 class="section-title">Included Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-pen-fancy"></i>
+                </div>
+                <h3>Content Creation Tools</h3>
+                <p>Unlimited access to all content templates and creation tools with advanced AI customization for your brand.</p>
+                <a href="/monthly-paid-plan/content-creation" class="service-link">
+                    Learn more <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Marketing Strategy</h3>
+                <p>Unlimited AI optimizations for your campaigns with advanced targeting and segmentation recommendations.</p>
+                <a href="/Monthly-Paid-Plan/marketing-strategy" class="service-link">
+                    Learn more <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Customer Experience</h3>
+                <p>Full access to advanced customer tools including segmentation, real-time tracking, and feedback analysis.</p>
+                <a href="/Monthly-Paid-Plan/customer-experience" class="service-link">
+                    Learn more <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI Consultation</h3>
+                <p>Unlimited consultations with our AI assistant for personalized insights and recommendations.</p>
+                <a href="/ai-consultation" class="service-link">
+                    Learn more <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h3>Reports & Dashboards</h3>
+                <p>Unlimited reports with fully customizable dashboards and advanced analytics tools.</p>
+                <a href="/Monthly-Paid-Plan/reports-dashboards" class="service-link">
+                    Learn more <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <h3>Integrations</h3>
+                <p>Connect with all your business tools including CRM, social media, and email marketing platforms.</p>
+                <a href="/Monthly-Paid-Plan/integrations" class="service-link">
+                    Learn more <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="benefits-section">
+    <div class="benefits-container">
+        <h2 class="section-title">Plan Benefits</h2>
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <h3>Unlimited Access</h3>
+                <p>No restrictions on feature usage or number of optimizations, reports, or consultations.</p>
+            </div>
+            
+            <div class="benefit-item">
+                <h3>Priority Support</h3>
+                <p>Get faster responses and dedicated assistance from our support team.</p>
+            </div>
+            
+            <div class="benefit-item">
+                <h3>Advanced Analytics</h3>
+                <p>Access to premium reporting features including forecasting and trend analysis.</p>
+            </div>
+            
+            <div class="benefit-item">
+                <h3>API Access</h3>
+                <p>Integrate Pelestia with your existing systems through our developer API.</p>
+            </div>
+            
+            <div class="benefit-item">
+                <h3>Cost Savings</h3>
+                <p>Save 16% compared to monthly billing with our annual subscription.</p>
+            </div>
+            
+            <div class="benefit-item">
+                <h3>Regular Updates</h3>
+                <p>Get early access to new features and improvements as they're released.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="cta-container">
+        <h2>Ready to Transform Your Business?</h2>
+        <p>Join hundreds of businesses using Pelestia's Yearly Plan to drive growth and efficiency.</p>
+        <div class="cta-buttons">
+            <a href="/signup" class="cta-btn primary">Sign Up Now</a>
+            <a href="/contact" class="cta-btn secondary">Contact Sales</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add any interactive elements if needed
+    });
+</script>
+{% endblock %}

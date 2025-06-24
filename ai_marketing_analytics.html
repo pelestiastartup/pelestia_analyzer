@@ -1,0 +1,311 @@
+﻿{% extends "base.html" %}
+
+{% block title %}AI-Driven Marketing & Analytics | Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .service-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: url("{{ url_for('static', filename='images/ai-pattern.png') }}") no-repeat;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .service-hero h1 {
+        font-size: 2.8em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .service-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto 40px;
+        position: relative;
+    }
+    
+    /* CTA Section - Moved up */
+    .cta-section {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+        color: white;
+        margin-bottom: 50px;
+    }
+    
+    .cta-section h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    
+    .cta-section p {
+        max-width: 700px;
+        margin: 0 auto 30px;
+        font-size: 1.1em;
+        opacity: 0.9;
+    }
+    
+    .cta-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: white;
+        color: #8B0000;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Content Section */
+    .service-content {
+        padding: 80px 20px;
+        background-color: white;
+    }
+    
+    .service-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    
+    .service-description {
+        background: #f9f9f9;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-description::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: #8B0000;
+        opacity: 0.1;
+        border-radius: 50%;
+        transform: translate(50%, 50%);
+    }
+    
+    .service-description h2 {
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-size: 2em;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .service-description h2::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #8B0000;
+        margin-top: 10px;
+    }
+    
+    .service-description p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+    
+    /* Benefits Section */
+    .benefits-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .benefits-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-top: 4px solid #8B0000;
+        transition: all 0.3s ease;
+    }
+    
+    .benefits-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .benefits-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .benefits-card h3 i {
+        font-size: 1.2em;
+    }
+    
+    .benefits-card ul {
+        padding-left: 20px;
+        color: #555;
+        line-height: 1.8;
+    }
+    
+    .benefits-card li {
+        margin-bottom: 10px;
+        position: relative;
+    }
+    
+    .benefits-card li::before {
+        content: '•';
+        color: #8B0000;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .service-hero {
+            padding: 80px 20px;
+        }
+        
+        .service-hero h1 {
+            font-size: 2em;
+        }
+        
+        .service-description {
+            padding: 30px 20px;
+        }
+        
+        .benefits-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="service-hero">
+    <div class="container">
+        <h1>AI-Driven Marketing & Analytics</h1>
+        <p>Transform raw data into strategic decisions with our cutting-edge AI analytics platform</p>
+        <a href="#service-details" class="btn">Explore Features →</a>
+    </div>
+</section>
+
+<!-- CTA Section - Moved up right after hero -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Transform Your Marketing?</h2>
+        <p>Try our AI Marketing & Analytics tools free for 5 days with no commitment. Get actionable insights to optimize your campaigns.</p>
+        <a href="{{ url_for('routes.trial_marketing_analytics') }}" class="cta-btn">Start Now</a>
+    </div>
+</section>
+
+<!-- Main Content Section -->
+<section class="service-content" id="service-details">
+    <div class="service-container">
+        <div class="service-description">
+            <h2><i class="fas fa-brain"></i> Service Overview</h2>
+            <p>Unlock the power of data with AI-Driven Marketing & Analytics. Our platform uses artificial intelligence to analyze customer behavior, trends, and market dynamics, providing you with actionable insights that optimize your marketing campaigns. Whether you're looking to improve customer targeting, enhance conversion rates, or understand market trends, Pelestia's AI-powered tools can help you make informed decisions.</p>
+            
+            <div class="benefits-section">
+                <div class="benefits-card">
+                    <h3><i class="fas fa-bolt"></i> What You Get</h3>
+                    <ul>
+                        <li>Real-Time Analytics: Gain insights into your campaigns and customer behavior in real time.</li>
+                        <li>Predictive Analytics: Use AI to forecast customer trends and behaviors, helping you stay ahead of the competition.</li>
+                        <li>Personalized Campaign Optimization: Tailor your marketing efforts based on customer data and predictive models.</li>
+                        <li>Advanced Reporting: Access customized reports that give you a deeper understanding of your marketing performance.</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-chart-line"></i> How This Benefits You</h3>
+                    <ul>
+                        <li>Maximize your marketing ROI with data-driven decisions.</li>
+                        <li>Predict trends and customer needs, allowing you to adjust strategies ahead of time.</li>
+                        <li>Personalize campaigns at scale, driving better engagement and higher conversions.</li>
+                        <li>Reduce guesswork with AI-powered recommendations and insights.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AI Visualization Section -->
+<section class="service-content" style="background-color: #f9f9f9;">
+    <div class="service-container">
+        <div class="service-description" style="background: white;">
+            <h2><i class="fas fa-project-diagram"></i> How It Works</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px;">
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #8B0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5em;">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 style="color: #8B0000;">Data Collection</h3>
+                    <p>Our system gathers data from multiple sources including your campaigns, website, and customer interactions.</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #8B0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5em;">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 style="color: #8B0000;">AI Analysis</h3>
+                    <p>Advanced algorithms process the data to identify patterns, trends, and actionable insights.</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #8B0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5em;">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 style="color: #8B0000;">Actionable Insights</h3>
+                    <p>Get clear recommendations and visual reports to optimize your marketing strategy.</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #8B0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5em;">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 style="color: #8B0000;">Implementation</h3>
+                    <p>Apply the insights to your campaigns and track performance improvements in real-time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer_text %}Transform Your Marketing with AI-Powered Insights{% endblock %}

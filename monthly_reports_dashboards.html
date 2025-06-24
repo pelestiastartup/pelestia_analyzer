@@ -1,0 +1,691 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Monthly Plan Reports & Dashboards{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Modern Dashboard Grid Layout */
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    
+    /* Hero Section */
+    .dashboard-hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        border-radius: 12px;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .dashboard-hero h1 {
+        font-size: 2.8em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+    
+    .dashboard-hero p {
+        font-size: 1.2em;
+        color: #555;
+        max-width: 700px;
+        margin: 0 auto 30px;
+    }
+    
+    .hero-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+    
+    .hero-btn {
+        display: inline-block;
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .hero-btn.primary {
+        background: #8B0000;
+        color: white;
+    }
+    
+    .hero-btn.secondary {
+        background: white;
+        color: #8B0000;
+        border: 2px solid #8B0000;
+    }
+    
+    .hero-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    /* Tool Cards Grid */
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+        margin: 40px 0;
+    }
+    
+    .tool-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: 1px solid #eee;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    
+    .tool-card .ai-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #8B0000;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.7em;
+        font-weight: bold;
+    }
+    
+    .tool-icon {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 15px;
+    }
+    
+    .tool-card h3 {
+        font-size: 1.3em;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .tool-card p {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+    
+    /* Modal Styles */
+    .dashboard-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        overflow-y: auto;
+    }
+    
+    .modal-content {
+        background: white;
+        width: 90%;
+        max-width: 1000px;
+        margin: 5% auto;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .modal-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .modal-header h2 {
+        color: #8B0000;
+        margin: 0;
+        font-size: 1.5em;
+    }
+    
+    .close-modal {
+        font-size: 1.8em;
+        color: #999;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    
+    .close-modal:hover {
+        color: #8B0000;
+    }
+    
+    .modal-body {
+        padding: 25px;
+    }
+    
+    /* Dashboard Builder Modal Specific */
+    .dashboard-preview {
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+        min-height: 300px;
+    }
+    
+    .widget-palette {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .widget-item {
+        background: white;
+        border: 1px dashed #ccc;
+        padding: 15px;
+        text-align: center;
+        border-radius: 6px;
+        cursor: grab;
+    }
+    
+    .widget-item:hover {
+        background: #f5f5f5;
+    }
+    
+    /* Report Generator Specific */
+    .report-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .report-type {
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+    }
+    
+    .report-type:hover {
+        border-color: #8B0000;
+    }
+    
+    .report-type.selected {
+        background: #f8e8e8;
+        border-color: #8B0000;
+    }
+    
+    /* KPI Tracker Specific */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .kpi-card {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    
+    .kpi-card h4 {
+        margin-top: 0;
+        color: #555;
+        font-size: 0.9em;
+    }
+    
+    .kpi-value {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .kpi-change {
+        font-size: 0.9em;
+    }
+    
+    .kpi-change.positive {
+        color: #28a745;
+    }
+    
+    .kpi-change.negative {
+        color: #dc3545;
+    }
+    
+    /* Action Buttons */
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+    
+    .modal-btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .primary-btn {
+        background: #8B0000;
+        color: white;
+    }
+    
+    .primary-btn:hover {
+        background: #A52A2A;
+    }
+    
+    .secondary-btn {
+        background: #f0f0f0;
+        color: #333;
+    }
+    
+    .secondary-btn:hover {
+        background: #e0e0e0;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .tools-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .hero-actions {
+            flex-direction: column;
+        }
+        
+        .modal-content {
+            width: 95%;
+            margin: 20px auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tool Cards - Modal Toggle
+        const toolCards = document.querySelectorAll('.tool-card');
+        const modals = document.querySelectorAll('.dashboard-modal');
+        const closeButtons = document.querySelectorAll('.close-modal');
+        
+        toolCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const toolId = this.getAttribute('data-tool');
+                document.getElementById(toolId).style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                
+                // Initialize specific tool functionality
+                if(toolId === 'dashboardBuilderModal') initDashboardBuilder();
+                if(toolId === 'reportGeneratorModal') initReportGenerator();
+                if(toolId === 'kpiTrackerModal') initKpiTracker();
+                if(toolId === 'reportSchedulerModal') initReportScheduler();
+                if(toolId === 'campaignAnalyzerModal') initCampaignAnalyzer();
+                if(toolId === 'funnelAnalyzerModal') initFunnelAnalyzer();
+            });
+        });
+        
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.dashboard-modal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        });
+        
+        // Close modal when clicking outside content
+        window.addEventListener('click', function(e) {
+            if(e.target.classList.contains('dashboard-modal')) {
+                e.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Dashboard Builder Functions
+        function initDashboardBuilder() {
+            console.log('Initializing dashboard builder...');
+            // In a real app, this would set up drag-and-drop functionality
+        }
+        
+        // Report Generator Functions
+        function initReportGenerator() {
+            const reportTypes = document.querySelectorAll('.report-type');
+            
+            reportTypes.forEach(type => {
+                type.addEventListener('click', function() {
+                    reportTypes.forEach(t => t.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // In a real app, this would load report preview
+                    const reportName = this.getAttribute('data-report');
+                    console.log('Selected report:', reportName);
+                });
+            });
+        }
+        
+        // KPI Tracker Functions
+        function initKpiTracker() {
+            // Sample KPI data
+            const kpiData = [
+                { name: 'Engagement Rate', value: '4.8%', change: '+0.5%', trend: 'positive' },
+                { name: 'Conversion Rate', value: '3.2%', change: '-0.2%', trend: 'negative' },
+                { name: 'Avg. Session', value: '2m 45s', change: 'No change', trend: 'neutral' },
+                { name: 'New Users', value: '1,245', change: '+12%', trend: 'positive' }
+            ];
+            
+            const kpiGrid = document.querySelector('.kpi-grid');
+            
+            // Clear existing KPIs (if any)
+            kpiGrid.innerHTML = '';
+            
+            // Add KPI cards
+            kpiData.forEach(kpi => {
+                const card = document.createElement('div');
+                card.className = 'kpi-card';
+                card.innerHTML = `
+                    <h4>${kpi.name}</h4>
+                    <div class="kpi-value">${kpi.value}</div>
+                    <div class="kpi-change ${kpi.trend}">${kpi.change}</div>
+                `;
+                kpiGrid.appendChild(card);
+            });
+            
+            // Initialize sample chart
+            const ctx = document.getElementById('kpiTrendChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Engagement Rate',
+                        data: [3.8, 4.1, 4.3, 4.6, 4.5, 4.8],
+                        borderColor: '#8B0000',
+                        backgroundColor: 'rgba(139, 0, 0, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Engagement Trend (Last 6 Months)'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Report Scheduler Functions
+        function initReportScheduler() {
+            console.log('Initializing report scheduler...');
+            // In a real app, this would set up scheduling UI
+        }
+        
+        // Campaign Analyzer Functions
+        function initCampaignAnalyzer() {
+            console.log('Initializing campaign analyzer...');
+            // In a real app, this would load campaign data
+        }
+        
+        // Funnel Analyzer Functions
+        function initFunnelAnalyzer() {
+            console.log('Initializing funnel analyzer...');
+            // In a real app, this would set up funnel visualization
+        }
+        
+        // Export functions
+        window.exportDashboard = function(format) {
+            alert(`Exporting dashboard as ${format} file...`);
+            // In a real app, this would call backend export API
+        };
+        
+        window.scheduleReport = function() {
+            const frequency = prompt('How often should this report be sent? (daily, weekly, monthly)');
+            if(frequency) {
+                alert(`Report scheduled to be sent ${frequency}. You'll receive it via email.`);
+                // In a real app, this would call backend scheduling API
+            }
+        };
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Hero Section -->
+    <section class="dashboard-hero">
+        <h1>Total Visibility. Smarter Decisions. Real Results.</h1>
+        <p>Build unlimited dashboards, track custom KPIs, generate AI-powered reports, and monitor performance in real time — all from one intuitive interface.</p>
+        <div class="hero-actions">
+            <a href="#" class="hero-btn primary">Build My Dashboard</a>
+            <a href="#" class="hero-btn secondary">Generate First Report</a>
+        </div>
+    </section>
+    
+    <!-- Tools Grid -->
+    <div class="tools-grid">
+        <!-- Dashboard Builder -->
+        <div class="tool-card" data-tool="dashboardBuilderModal">
+            <div class="ai-badge">AI</div>
+            <div class="tool-icon">📊</div>
+            <h3>Dashboard Builder</h3>
+            <p>Create & customize dashboards with drag-and-drop widgets. Choose from 15+ visualization types.</p>
+        </div>
+        
+        <!-- Report Generator -->
+        <div class="tool-card" data-tool="reportGeneratorModal">
+            <div class="ai-badge">AI</div>
+            <div class="tool-icon">📄</div>
+            <h3>Report Generator</h3>
+            <p>Generate professional reports for campaigns, engagement, sales, and more with one click.</p>
+        </div>
+        
+        <!-- KPI Tracker -->
+        <div class="tool-card" data-tool="kpiTrackerModal">
+            <div class="ai-badge">AI</div>
+            <div class="tool-icon">🎯</div>
+            <h3>KPI Tracker</h3>
+            <p>Monitor priority metrics in real-time with customizable alerts when thresholds are crossed.</p>
+        </div>
+        
+        <!-- Report Scheduler -->
+        <div class="tool-card" data-tool="reportSchedulerModal">
+            <div class="tool-icon">⏰</div>
+            <h3>Report Scheduler</h3>
+            <p>Automate recurring weekly/monthly reports sent directly to your team's inbox.</p>
+        </div>
+        
+        <!-- Campaign Analyzer -->
+        <div class="tool-card" data-tool="campaignAnalyzerModal">
+            <div class="ai-badge">AI</div>
+            <div class="tool-icon">📈</div>
+            <h3>Campaign Performance</h3>
+            <p>Visual breakdown of channel performance with AI-powered optimization tips.</p>
+        </div>
+        
+        <!-- Funnel Analyzer -->
+        <div class="tool-card" data-tool="funnelAnalyzerModal">
+            <div class="ai-badge">AI</div>
+            <div class="tool-icon">🔁</div>
+            <h3>Conversion Funnel</h3>
+            <p>Identify drop-off points and get recommendations to improve conversion rates.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Builder Modal -->
+<div id="dashboardBuilderModal" class="dashboard-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Dashboard Builder</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h3>Widget Palette</h3>
+            <div class="widget-palette">
+                <div class="widget-item">Line Chart</div>
+                <div class="widget-item">Bar Graph</div>
+                <div class="widget-item">Pie Chart</div>
+                <div class="widget-item">KPI Metric</div>
+                <div class="widget-item">Data Table</div>
+                <div class="widget-item">Text Box</div>
+            </div>
+            
+            <h3>Dashboard Preview</h3>
+            <div class="dashboard-preview">
+                <p>Drag widgets here to build your dashboard</p>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn primary-btn" onclick="exportDashboard('PDF')">Export as PDF</button>
+                <button class="modal-btn secondary-btn">Save Dashboard</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Generator Modal -->
+<div id="reportGeneratorModal" class="dashboard-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Report Generator</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h3>Select Report Type</h3>
+            <div class="report-options">
+                <div class="report-type selected" data-report="engagement">Engagement</div>
+                <div class="report-type" data-report="sales">Sales Performance</div>
+                <div class="report-type" data-report="funnel">Conversion Funnel</div>
+                <div class="report-type" data-report="roi">ROI Analysis</div>
+            </div>
+            
+            <h3>Report Preview</h3>
+            <div class="dashboard-preview">
+                <img src="/static/images/report-preview.png" alt="Report Preview" style="max-width: 100%; border-radius: 6px;">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn primary-btn" onclick="exportDashboard('PDF')">Export as PDF</button>
+                <button class="modal-btn primary-btn" onclick="exportDashboard('Excel')">Export as Excel</button>
+                <button class="modal-btn secondary-btn" onclick="scheduleReport()">Schedule Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- KPI Tracker Modal -->
+<div id="kpiTrackerModal" class="dashboard-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>KPI Tracker</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h3>Current Metrics</h3>
+            <div class="kpi-grid">
+                <!-- Dynamically populated by JS -->
+            </div>
+            
+            <h3>Trend Analysis</h3>
+            <div class="dashboard-preview">
+                <canvas id="kpiTrendChart" height="250"></canvas>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn primary-btn" onclick="exportDashboard('PDF')">Export Snapshot</button>
+                <button class="modal-btn secondary-btn">Set Alerts</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Scheduler Modal -->
+<div id="reportSchedulerModal" class="dashboard-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Report Scheduler</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h3>Schedule New Report</h3>
+            <div class="dashboard-preview">
+                <p>Configure your automated report delivery schedule</p>
+                <!-- In a real app, this would have form fields -->
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn primary-btn">Save Schedule</button>
+                <button class="modal-btn secondary-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Campaign Analyzer Modal -->
+<div id="campaignAnalyzerModal" class="dashboard-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Campaign Performance Analyzer</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h3>Select Campaign</h3>
+            <div class="dashboard-preview">
+                <p>Analyze performance across different marketing channels</p>
+                <!-- In a real app, this would show campaign data -->
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn primary-btn" onclick="exportDashboard('PDF')">Export Analysis</button>
+                <button class="modal-btn secondary-btn">View Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Funnel Analyzer Modal -->
+<div id="funnelAnalyzerModal" class="dashboard-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Conversion Funnel Analyzer</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h3>Funnel Visualization</h3>
+            <div class="dashboard-preview">
+                <p>Identify where users drop off in your conversion process</p>
+                <!-- In a real app, this would show funnel visualization -->
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn primary-btn" onclick="exportDashboard('PDF')">Export Funnel</button>
+                <button class="modal-btn secondary-btn">Get Optimization Tips</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

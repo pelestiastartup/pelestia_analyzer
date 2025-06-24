@@ -1,0 +1,518 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Integration Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Dashboard Layout */
+    .dashboard-hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    }
+
+    .dashboard-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .dashboard-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        padding: 40px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .tool-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border-top: 4px solid #8B0000;
+        cursor: pointer;
+    }
+
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .tool-icon {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 15px;
+    }
+
+    .tool-card h3 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+
+    .tool-card p {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .open-tool-btn {
+        display: inline-block;
+        padding: 8px 20px;
+        background: #8B0000;
+        color: white;
+        border-radius: 20px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s;
+        font-size: 0.9em;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        z-index: 1000;
+        display: none;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+        z-index: 1001;
+        display: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        color: #8B0000;
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    /* Tool-specific styles */
+    .tool-form textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 1em;
+    }
+
+    .analyze-btn {
+        background: #8B0000;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1em;
+    }
+
+    .analyze-btn:hover {
+        background: #A52A2A;
+    }
+
+    .results-container {
+        margin-top: 30px;
+        display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .tools-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .modal-container {
+            width: 95%;
+            max-height: 85vh;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal functionality
+    const toolCards = document.querySelectorAll('.tool-card');
+    const modalOverlay = document.querySelector('.modal-overlay');
+    const modalContainer = document.querySelector('.modal-container');
+    const closeModalBtn = document.querySelector('.close-modal');
+    
+    // Open modal when tool card is clicked
+    toolCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const toolId = this.getAttribute('data-tool');
+            const modalContent = document.querySelector(`#${toolId}-content`);
+            
+            // Set modal content
+            document.querySelector('.modal-content').innerHTML = modalContent.innerHTML;
+            
+            // Show modal
+            modalOverlay.style.display = 'block';
+            modalContainer.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Initialize tool-specific JS
+            initToolJS(toolId);
+        });
+    });
+    
+    // Close modal
+    function closeModal() {
+        modalOverlay.style.display = 'none';
+        modalContainer.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    closeModalBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', closeModal);
+    
+    // Initialize tool-specific JavaScript
+    function initToolJS(toolId) {
+        if (toolId === 'website-scanner') {
+            // Website scanner specific JS
+            const analyzeBtn = document.querySelector('#scan-website');
+            if (analyzeBtn) {
+                analyzeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    analyzeWebsite();
+                });
+            }
+        }
+        // Add other tool initializations here
+    }
+    
+    // Example tool function
+    function analyzeWebsite() {
+        const url = document.querySelector('#website-url').value;
+        const analyzeBtn = document.querySelector('#scan-website');
+        const results = document.querySelector('#website-results');
+        
+        if (!url.trim()) {
+            alert('Please enter a website URL');
+            return;
+        }
+        
+        // Show loading state
+        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = 'Analyzing...';
+        
+        // Simulate API call
+        setTimeout(function() {
+            // Mock analysis results
+            const mockResults = {
+                performance: {
+                    score: 78,
+                    loadTime: "2.8s",
+                    accessibility: 65
+                },
+                recommendations: [
+                    "Improve mobile navigation",
+                    "Add more contrast to CTAs",
+                    "Reduce third-party scripts"
+                ],
+                techStack: ["WordPress", "Elementor", "Cloudflare", "jQuery"]
+            };
+            
+            // Display results
+            results.innerHTML = `
+                <h3>Analysis Results for ${url}</h3>
+                <div style="display: flex; justify-content: space-between; margin: 20px 0;">
+                    <div style="text-align: center; padding: 15px; background: rgba(0,128,0,0.1); border-radius: 8px; width: 30%;">
+                        <h4>Performance Score</h4>
+                        <p style="font-size: 1.5em; font-weight: bold;">${mockResults.performance.score}/100</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255,165,0,0.1); border-radius: 8px; width: 30%;">
+                        <h4>Load Time</h4>
+                        <p style="font-size: 1.5em; font-weight: bold;">${mockResults.performance.loadTime}</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(0,0,255,0.1); border-radius: 8px; width: 30%;">
+                        <h4>Accessibility</h4>
+                        <p style="font-size: 1.5em; font-weight: bold;">${mockResults.performance.accessibility}/100</p>
+                    </div>
+                </div>
+                <h4>Key Recommendations:</h4>
+                <ul style="margin-bottom: 20px;">
+                    ${mockResults.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                </ul>
+                <h4>Tech Stack Detected:</h4>
+                <div style="margin-bottom: 20px;">
+                    ${mockResults.techStack.map(tech => `<span style="display: inline-block; background: #f0f0f0; padding: 5px 15px; border-radius: 20px; margin-right: 10px; margin-bottom: 10px;">${tech}</span>`).join('')}
+                </div>
+            `;
+            
+            results.style.display = 'block';
+            analyzeBtn.disabled = false;
+            analyzeBtn.textContent = 'Analyze Website';
+            
+            // Scroll to results
+            results.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 1500);
+    }
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="dashboard-hero">
+    <div class="container">
+        <h1>Integration Studio</h1>
+        <p>Connect, compare, and automate your external platforms with Pelestia's powerful integration tools.</p>
+        <div style="margin-top: 30px;">
+            <a href="#tools-section" class="open-tool-btn" style="margin-right: 15px;">Explore Tools</a>
+            <a href="/monthly-paid-plan" class="open-tool-btn" style="background: white; color: #8B0000; border: 1px solid #8B0000;">View Full Features</a>
+        </div>
+    </div>
+</section>
+
+<!-- Tools Grid -->
+<section id="tools-section" class="tools-grid">
+    <!-- Website Scanner -->
+    <div class="tool-card" data-tool="website-scanner">
+        <div class="tool-icon">
+            <i class="fas fa-globe"></i>
+        </div>
+        <h3>Website Scanner</h3>
+        <p>Analyze any website's performance, UX, and tech stack with detailed recommendations.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Analytics Connector -->
+    <div class="tool-card" data-tool="analytics-connector">
+        <div class="tool-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Analytics Connector</h3>
+        <p>Connect and analyze data from multiple analytics platforms in one place.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- API Integrator -->
+    <div class="tool-card" data-tool="api-integrator">
+        <div class="tool-icon">
+            <i class="fas fa-plug"></i>
+        </div>
+        <h3>API Integrator</h3>
+        <p>Connect and manage all your external APIs with unified authentication.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Data Comparator -->
+    <div class="tool-card" data-tool="data-comparator">
+        <div class="tool-icon">
+            <i class="fas fa-not-equal"></i>
+        </div>
+        <h3>Data Comparator</h3>
+        <p>Compare datasets from different sources to identify discrepancies.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Workflow Automator -->
+    <div class="tool-card" data-tool="workflow-automator">
+        <div class="tool-icon">
+            <i class="fas fa-robot"></i>
+        </div>
+        <h3>Workflow Automator</h3>
+        <p>Create automated workflows between your connected platforms.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+
+    <!-- Report Generator -->
+    <div class="tool-card" data-tool="report-generator">
+        <div class="tool-icon">
+            <i class="fas fa-file-export"></i>
+        </div>
+        <h3>Report Generator</h3>
+        <p>Create and export professional reports from your integrated data.</p>
+        <div class="open-tool-btn">Open Tool</div>
+    </div>
+</section>
+
+<!-- Modal Structure -->
+<div class="modal-overlay"></div>
+<div class="modal-container">
+    <div class="modal-header">
+        <h2>Tool Title</h2>
+        <button class="close-modal">&times;</button>
+    </div>
+    <div class="modal-content">
+        <!-- Content will be injected here from the hidden templates -->
+    </div>
+</div>
+
+<!-- Hidden Tool Contents (will be injected into modal) -->
+<div id="website-scanner-content" style="display: none;">
+    <h3>Website Scanner</h3>
+    <p>Enter any website URL to analyze its performance, UX, and technology stack.</p>
+    
+    <form class="tool-form">
+        <input type="text" id="website-url" placeholder="https://example.com" style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <div style="margin-bottom: 20px;">
+            <label>
+                <input type="checkbox" checked> Include UX + Tech Stack Scan
+            </label>
+        </div>
+        <button type="button" class="analyze-btn" id="scan-website">
+            Analyze Website
+        </button>
+    </form>
+    
+    <div class="results-container" id="website-results">
+        <!-- Results will be inserted here -->
+    </div>
+</div>
+
+<div id="analytics-connector-content" style="display: none;">
+    <h3>Analytics Connector</h3>
+    <p>Upload your analytics data from any platform to generate unified reports.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Upload Analytics Data:</strong></label>
+            <div style="border: 2px dashed #ddd; padding: 20px; text-align: center; margin-bottom: 15px;">
+                <p>Drag & drop PDF/CSV/XLS files here</p>
+                <p>or</p>
+                <button type="button" class="analyze-btn" style="background: white; color: #8B0000; border: 1px solid #8B0000;">Select Files</button>
+            </div>
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Analyze Data
+        </button>
+    </form>
+</div>
+
+<div id="api-integrator-content" style="display: none;">
+    <h3>API Integrator</h3>
+    <p>Connect to external APIs with unified authentication.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>API Provider:</strong></label>
+            <select style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                <option>Google Analytics</option>
+                <option>Facebook Ads</option>
+                <option>Twitter API</option>
+                <option>Custom API</option>
+            </select>
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Connect API
+        </button>
+    </form>
+</div>
+
+<div id="data-comparator-content" style="display: none;">
+    <h3>Data Comparator</h3>
+    <p>Upload datasets from different sources to compare them.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Dataset 1:</strong></label>
+            <input type="file" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label><strong>Dataset 2:</strong></label>
+            <input type="file" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Compare Data
+        </button>
+    </form>
+</div>
+
+<div id="workflow-automator-content" style="display: none;">
+    <h3>Workflow Automator</h3>
+    <p>Create automated workflows between your connected platforms.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Trigger:</strong></label>
+            <select style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                <option>New data in Google Analytics</option>
+                <option>CRM record updated</option>
+                <option>Scheduled time</option>
+            </select>
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Build Workflow
+        </button>
+    </form>
+</div>
+
+<div id="report-generator-content" style="display: none;">
+    <h3>Report Generator</h3>
+    <p>Select the data you want to include in your integration report.</p>
+    
+    <form class="tool-form">
+        <div style="margin-bottom: 20px;">
+            <label><strong>Report Type:</strong></label>
+            <select style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                <option>Executive Summary</option>
+                <option>Detailed Analysis</option>
+                <option>Quarterly Review</option>
+            </select>
+        </div>
+        
+        <button type="button" class="analyze-btn">
+            Generate Report
+        </button>
+    </form>
+</div>
+{% endblock %}

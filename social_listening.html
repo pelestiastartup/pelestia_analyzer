@@ -1,0 +1,466 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Social Listening & Monitoring | Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .service-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: url("{{ url_for('static', filename='images/social-pattern.png') }}") no-repeat;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .service-hero h1 {
+        font-size: 2.8em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .service-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto 40px;
+        position: relative;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+        color: white;
+        margin-bottom: 50px;
+    }
+    
+    .cta-section h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    
+    .cta-section p {
+        max-width: 700px;
+        margin: 0 auto 30px;
+        font-size: 1.1em;
+        opacity: 0.9;
+    }
+    
+    .cta-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: white;
+        color: #8B0000;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Content Section */
+    .service-content {
+        padding: 80px 20px;
+        background-color: white;
+    }
+    
+    .service-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    
+    .service-description {
+        background: #f9f9f9;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-description::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: #8B0000;
+        opacity: 0.1;
+        border-radius: 50%;
+        transform: translate(50%, 50%);
+    }
+    
+    .service-description h2 {
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-size: 2em;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .service-description h2::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #8B0000;
+        margin-top: 10px;
+    }
+    
+    .service-description p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+    
+    /* Benefits Section */
+    .benefits-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .benefits-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-top: 4px solid #8B0000;
+        transition: all 0.3s ease;
+    }
+    
+    .benefits-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .benefits-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .benefits-card h3 i {
+        font-size: 1.2em;
+    }
+    
+    .benefits-card ul {
+        padding-left: 20px;
+        color: #555;
+        line-height: 1.8;
+    }
+    
+    .benefits-card li {
+        margin-bottom: 10px;
+        position: relative;
+    }
+    
+    .benefits-card li::before {
+        content: '•';
+        color: #8B0000;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+
+    /* Algorithm Progress Section */
+    .progress-section {
+        padding: 40px;
+        background: #f0f0f0;
+        border-radius: 10px;
+        margin-top: 40px;
+        text-align: center;
+    }
+
+    .progress-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .progress-bar {
+        height: 20px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        margin: 20px 0;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #8B0000;
+        width: 65%;
+        border-radius: 10px;
+        transition: width 1s ease-in-out;
+    }
+
+    .progress-text {
+        font-style: italic;
+        color: #666;
+        margin-top: 10px;
+    }
+
+    /* Demo Section */
+    .demo-section {
+        margin-top: 40px;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .demo-placeholder {
+        height: 300px;
+        background: #f9f9f9;
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        font-style: italic;
+        margin: 20px 0;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .service-hero {
+            padding: 80px 20px;
+        }
+        
+        .service-hero h1 {
+            font-size: 2em;
+        }
+        
+        .service-description {
+            padding: 30px 20px;
+        }
+        
+        .benefits-section {
+            grid-template-columns: 1fr;
+        }
+
+        .progress-section {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="service-hero">
+    <div class="container">
+        <h1>Monitor Social Trends with Advanced Insights</h1>
+        <p>Gain a deeper understanding of Algerian society with Pelestia AI-powered social listening tools.</p>
+        <a href="#service-details" class="btn">Explore Features →</a>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Understand Algerian Social Trends?</h2>
+        <p>Each of our plans comes with different levels of access to Social Listening & Monitoring. Choose the plan that best suits your needs to get started.</p>
+        <a href="/plans" class="cta-btn">Explore Plans</a>
+    </div>
+</section>
+
+<!-- Main Content Section -->
+<section class="service-content" id="service-details">
+    <div class="service-container">
+        <div class="service-description">
+            <h2><i class="fas fa-headphones"></i> What is Social Listening & Monitoring?</h2>
+            <p>Our Social Listening & Monitoring service allows businesses to track and analyze conversations happening across the Algerian social media landscape. The algorithm focuses on understanding the Algerian dialect, trends, and societal behaviors, offering insights specific to the local market and consumer culture.</p>
+            <p>We're creating a specialized algorithm that can identify key social media conversations in local dialects, ensuring businesses can understand regional trends and consumer sentiment accurately.</p>
+            
+            <!-- Algorithm Progress Section -->
+            <div class="progress-section">
+                <h3><i class="fas fa-cogs"></i> Algorithm Development Progress</h3>
+                <p>We're currently fine-tuning our AI model to ensure it provides the most accurate insights into Algerian society.</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p class="progress-text">Our AI is learning the Algerian dialect, and soon it will offer real-time insights into social conversations.</p>
+                </div>
+            </div>
+
+            <div class="benefits-section">
+                <div class="benefits-card">
+                    <h3><i class="fas fa-bolt"></i> Key Features</h3>
+                    <ul>
+                        <li><strong>Real-Time Trend Tracking:</strong> Monitor conversations about your brand, industry, or any topic across Algerian social media.</li>
+                        <li><strong>Sentiment Analysis:</strong> Understand public sentiment with positive, neutral, or negative mention detection.</li>
+                        <li><strong>Local Dialect Understanding:</strong> Specialized in Algerian Arabic, Berber, and local dialects.</li>
+                        <li><strong>Customizable Alerts:</strong> Set up alerts for specific keywords or competitors.</li>
+                        <li><strong>Audience Insights:</strong> Gather data about your target audience's demographics and preferences.</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-chart-line"></i> How This Benefits You</h3>
+                    <ul>
+                        <li>Understand Algerian consumer behavior in their native language</li>
+                        <li>Identify emerging trends before competitors</li>
+                        <li>Measure brand sentiment accurately in local context</li>
+                        <li>Create culturally relevant marketing campaigns</li>
+                        <li>Respond quickly to PR crises or opportunities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="service-content" style="background-color: #f9f9f9;">
+    <div class="service-container">
+        <div class="service-description" style="background: white;">
+            <h2><i class="fas fa-project-diagram"></i> How It Works</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px;">
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #8B0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5em;">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 style="color: #8B0000;">Data Collection</h3>
+                    <p>Our system gathers data from Algerian social media platforms, forums, and news sources.</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #8B0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5em;">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3 style="color: #8B0000;">Dialect Processing</h3>
+                    <p>Advanced NLP algorithms process Algerian Arabic and local dialects with cultural context.</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #8B0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5em;">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3 style="color: #8B0000;">Analysis</h3>
+                    <p>Identify trends, sentiment, and key topics specific to the Algerian market.</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #8B0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.5em;">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 style="color: #8B0000;">Insights Delivery</h3>
+                    <p>Get clear reports and actionable recommendations tailored for your business.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo Section -->
+<section class="service-content">
+    <div class="service-container">
+        <div class="service-description">
+            <h2><i class="fas fa-desktop"></i> Platform Preview</h2>
+            <p>See how our social listening dashboard will help you understand Algerian social media conversations:</p>
+            
+            <div class="demo-section">
+                <div class="demo-placeholder">
+                    Future Home of Interactive Social Listening Demo
+                </div>
+                <p style="text-align: center; font-style: italic;">Our demo will showcase real-time tracking of Algerian social media trends when the platform launches.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases Section -->
+<section class="service-content" style="background-color: #f9f9f9;">
+    <div class="service-container">
+        <div class="service-description" style="background: white;">
+            <h2><i class="fas fa-lightbulb"></i> Real-World Applications</h2>
+            <p>Discover how Algerian businesses and organizations are leveraging our social listening technology:</p>
+            
+            <div class="benefits-section" style="margin-top: 30px;">
+                <div class="benefits-card">
+                    <h3><i class="fas fa-store"></i> Retail & E-commerce</h3>
+                    <ul>
+                        <li>Algiers-based fashion brand identified trending colors/styles through social mentions</li>
+                        <li>Electronics retailer detected customer complaints about delivery times</li>
+                        <li>Local marketplace discovered underserved product categories</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-utensils"></i> Food & Beverage</h3>
+                    <ul>
+                        <li>Popular café chain adapted menu based on regional flavor preferences</li>
+                        <li>Food delivery service optimized operations by analyzing complaint patterns</li>
+                        <li>Local halal brand identified influencers driving conversations</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-landmark"></i> Government & NGOs</h3>
+                    <ul>
+                        <li>Ministry tracked public sentiment about new policies</li>
+                        <li>Non-profit identified regions needing educational resources</li>
+                        <li>Local government improved services by analyzing citizen feedback</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-heart"></i> Healthcare</h3>
+                    <ul>
+                        <li>Pharmaceutical company monitored medication effectiveness discussions</li>
+                        <li>Hospitals identified common patient concerns</li>
+                        <li>Public health campaigns tailored messaging to regional dialects</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="/contact" class="cta-btn" style="background: #8B0000; color: white;">Request Custom Use Case Analysis</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Stay Ahead of Algerian Social Trends</h2>
+        <p>Join our waitlist to be notified when our specialized Algerian social listening tools launch.</p>
+        <a href="/request-demo" class="cta-btn">Join the Waitlist</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer_text %}Understand Algerian Social Media Like Never Before{% endblock %}

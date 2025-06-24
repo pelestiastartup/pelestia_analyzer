@@ -1,0 +1,1202 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Monthly Plan Content Creation Tools{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .content-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .content-hero::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: url('/static/images/decorative-icon1.png') no-repeat;
+        background-size: contain;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .content-hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .content-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    
+    .content-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto 30px;
+    }
+
+    .content-hero-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: #8B0000;
+        color: white;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .content-hero-btn:hover {
+        background: #A52A2A;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Content Sections */
+    .content-section {
+        padding: 60px 20px;
+    }
+
+    .section-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2em;
+        color: #8B0000;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+
+    /* Templates Section */
+    .template-categories {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .template-category {
+        padding: 10px 20px;
+        background: #f0f0f0;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .template-category.active {
+        background: #8B0000;
+        color: white;
+    }
+
+    .template-category:hover:not(.active) {
+        background: #e0e0e0;
+    }
+
+    .templates-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+    }
+
+    .template-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+
+    .template-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .template-preview {
+        height: 200px;
+        background: #f9f9f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+    }
+
+    .template-info {
+        padding: 20px;
+    }
+
+    .template-info h3 {
+        color: #222;
+        margin-bottom: 10px;
+    }
+
+    .template-info p {
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .template-btn {
+        display: inline-block;
+        padding: 8px 20px;
+        background: #8B0000;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .template-btn:hover {
+        background: #A52A2A;
+    }
+
+    /* Template Modal Styles */
+    .template-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+    }
+
+    .template-modal-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+        width: 80%;
+        max-width: 800px;
+        max-height: 80vh;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 28px;
+        font-weight: bold;
+        color: #8B0000;
+        cursor: pointer;
+    }
+
+    .template-modal-header {
+        border-bottom: 2px solid #8B0000;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+
+    .template-modal-header h2 {
+        color: #8B0000;
+        margin-bottom: 10px;
+    }
+
+    .template-modal-body {
+        padding: 15px 0;
+    }
+
+    .template-section {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+    }
+
+    .template-section:last-child {
+        border-bottom: none;
+    }
+
+    .template-section h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+    }
+
+    .template-content {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .template-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .modal-template-btn {
+        padding: 8px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .use-template-btn {
+        background: #8B0000;
+        color: white;
+        border: none;
+    }
+
+    .use-template-btn:hover {
+        background: #A52A2A;
+    }
+
+    .close-template-btn {
+        background: white;
+        color: #8B0000;
+        border: 1px solid #8B0000;
+    }
+
+    .close-template-btn:hover {
+        background: #f5f5f5;
+    }
+
+    /* AI Generator Section */
+    .ai-generator {
+        background: #f9f9f9;
+        border-radius: 10px;
+        padding: 30px;
+        margin-bottom: 40px;
+    }
+
+    .ai-generator-form {
+        display: grid;
+        gap: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #444;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+    }
+
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .generate-btn {
+        padding: 12px 30px;
+        background: #8B0000;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .generate-btn:hover {
+        background: #A52A2A;
+    }
+
+    .ai-results {
+        margin-top: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+    .ai-result-item {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .ai-result-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .ai-result-item h4 {
+        color: #8B0000;
+        margin-bottom: 10px;
+    }
+
+    .ai-result-item p {
+        color: #333;
+        line-height: 1.6;
+    }
+
+    /* Image Generator */
+    .image-preview-container {
+        width: 100%;
+        height: 300px;
+        background: #eee;
+        margin: 20px 0;
+        border-radius: 5px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .image-preview-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        display: none;
+    }
+
+    .download-btn {
+        padding: 8px 15px;
+        background: #8B0000;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 10px;
+        display: none;
+    }
+
+    .download-btn:hover {
+        background: #A52A2A;
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 10px;
+        display: none;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Optimization Section */
+    .optimization-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+    }
+
+    .optimization-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .optimization-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+    }
+
+    .optimization-card p {
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    /* How It Works Section */
+    .steps-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-top: 40px;
+    }
+
+    .step {
+        flex: 1;
+        min-width: 200px;
+        text-align: center;
+        padding: 0 15px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: #8B0000;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        margin: 0 auto 20px;
+    }
+
+    .step h3 {
+        color: #222;
+        margin-bottom: 15px;
+    }
+
+    .step p {
+        color: #666;
+    }
+
+    /* Limitations Section */
+    .limitations {
+        background: #f9f9f9;
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .limitations ul {
+        list-style-type: none;
+        padding: 0;
+        max-width: 600px;
+        margin: 20px auto;
+    }
+
+    .limitations li {
+        margin-bottom: 10px;
+        color: #666;
+    }
+
+    .upgrade-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 30px;
+        background: #8B0000;
+        color: white;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .upgrade-btn:hover {
+        background: #A52A2A;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .content-hero {
+            padding: 80px 20px;
+        }
+        
+        .content-hero h1 {
+            font-size: 2em;
+        }
+        
+        .steps-container {
+            flex-direction: column;
+        }
+        
+        .step {
+            margin-bottom: 40px;
+        }
+
+        .template-modal-content {
+            width: 90%;
+            margin: 10% auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get CSRF token for AJAX requests
+        function getCSRFToken() {
+            const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+            return csrfTokenMeta ? csrfTokenMeta.content : '';
+        }
+
+        // Template data
+        const templates = {
+            'instagram-post': {
+                title: 'Instagram Post – Product Launch',
+                category: 'Social Media',
+                content: `
+                    <div class="template-section">
+                        <h3>Headline</h3>
+                        <div class="template-content">
+                            <p>Introducing our latest [Product Name] — designed to bring you [Key Benefit]!</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Body</h3>
+                        <div class="template-content">
+                            <p>Say goodbye to [common problem], and hello to [solution]. Tap the link in bio to get yours today!</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Hashtags</h3>
+                        <div class="template-content">
+                            <p>#NewArrival #Innovation #ProductLaunch #YourBrandName</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Call to Action</h3>
+                        <div class="template-content">
+                            <p>Shop now and experience the difference!</p>
+                        </div>
+                    </div>
+                `
+            },
+            'blog-post': {
+                title: 'Blog Post Template',
+                category: 'Blog',
+                content: `
+                    <div class="template-section">
+                        <h3>Title</h3>
+                        <div class="template-content">
+                            <p>How to [Achieve Result] with [Product/Service]</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Introduction</h3>
+                        <div class="template-content">
+                            <p>Struggling with [problem]? Here's a step-by-step guide on how [product] can help you [solution].</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Body Sections</h3>
+                        <div class="template-content">
+                            <ul>
+                                <li>Step 1: [Explain action]</li>
+                                <li>Step 2: [Explain action]</li>
+                                <li>Benefits of using [product/service]</li>
+                                <li>Tips and tricks</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Conclusion</h3>
+                        <div class="template-content">
+                            <p>Ready to try? Visit [link] or contact us for a free demo!</p>
+                        </div>
+                    </div>
+                `
+            },
+            'email-newsletter': {
+                title: 'Email Newsletter Template',
+                category: 'Email',
+                content: `
+                    <div class="template-section">
+                        <h3>Subject</h3>
+                        <div class="template-content">
+                            <p>Welcome to [Brand]! Here's what to expect</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Body</h3>
+                        <div class="template-content">
+                            <p>Hi [Name],<br><br>
+                            Thanks for joining the [Brand] family! Here's what you'll get: exclusive offers, insider tips, and more.<br><br>
+                            Stay tuned!<br>
+                            [Brand Team]</p>
+                        </div>
+                    </div>
+                `
+            },
+            'facebook-ad': {
+                title: 'Facebook Ad Template',
+                category: 'Social Media',
+                content: `
+                    <div class="template-section">
+                        <h3>Headline</h3>
+                        <div class="template-content">
+                            <p>Discover [Product Name] - The Solution to [Problem]</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Primary Text</h3>
+                        <div class="template-content">
+                            <p>Tired of [problem]? Our [product] helps you [benefit] in just [timeframe]. Try it risk-free today!</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Call to Action</h3>
+                        <div class="template-content">
+                            <p>Shop Now → [link]</p>
+                        </div>
+                    </div>
+                `
+            },
+            'linkedin-post': {
+                title: 'LinkedIn Post Template',
+                category: 'Social Media',
+                content: `
+                    <div class="template-section">
+                        <h3>Headline</h3>
+                        <div class="template-content">
+                            <p>Why [Industry Trend] is Reshaping [Your Sector] in 2025</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Body</h3>
+                        <div class="template-content">
+                            <p>At [Your Brand], we believe staying ahead means embracing change. Here's how [Trend] is impacting our work and how you can adapt.</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Call to Action</h3>
+                        <div class="template-content">
+                            <p>Read more on our blog: [link]</p>
+                        </div>
+                    </div>
+                `
+            },
+            'instagram-story': {
+                title: 'Instagram Story Template',
+                category: 'Social Media',
+                content: `
+                    <div class="template-section">
+                        <h3>Slide 1</h3>
+                        <div class="template-content">
+                            <p>"Here's how we create your favorite [product/service]..."</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Slide 2</h3>
+                        <div class="template-content">
+                            <p>Show team working, materials, or process with captions like "Quality you can trust."</p>
+                        </div>
+                    </div>
+                    <div class="template-section">
+                        <h3>Slide 3</h3>
+                        <div class="template-content">
+                            <p>Swipe up or tap for exclusive offer!</p>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // Open modal with template content
+        function openTemplateModal(templateId) {
+            const template = templates[templateId];
+            if (!template) return;
+            
+            const modal = document.getElementById('templateModal');
+            const modalTitle = document.getElementById('modalTemplateTitle');
+            const modalCategory = document.getElementById('modalTemplateCategory');
+            const modalContent = document.getElementById('modalTemplateContent');
+            
+            modalTitle.textContent = template.title;
+            modalCategory.textContent = template.category;
+            modalContent.innerHTML = template.content;
+            
+            modal.style.display = 'block';
+        }
+
+        // Close modal
+        function closeTemplateModal() {
+            document.getElementById('templateModal').style.display = 'none';
+        }
+
+        // Set up template click events
+        document.querySelectorAll('.template-btn').forEach((btn, index) => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const templateIds = Object.keys(templates);
+                const templateId = templateIds[index % templateIds.length];
+                openTemplateModal(templateId);
+            });
+        });
+
+        // Close modal when clicking X or outside
+        document.querySelector('.close-modal').addEventListener('click', closeTemplateModal);
+        document.querySelector('.close-template-btn').addEventListener('click', closeTemplateModal);
+        window.addEventListener('click', function(event) {
+            if (event.target === document.getElementById('templateModal')) {
+                closeTemplateModal();
+            }
+        });
+
+        // Use Template button functionality
+        document.querySelector('.use-template-btn').addEventListener('click', function() {
+            // Here you can add functionality to auto-fill the AI generator form
+            alert('Template selected! This would auto-fill the AI generator form in a real implementation.');
+            closeTemplateModal();
+        });
+
+        // Content Generation Form
+        const contentForm = document.querySelector('.ai-generator-form');
+        const generateBtn = contentForm.querySelector('.generate-btn');
+        const aiResults = document.querySelector('.ai-results');
+        const loadingSpinner = document.createElement('span');
+        loadingSpinner.className = 'loading-spinner';
+        generateBtn.prepend(loadingSpinner);
+        const btnText = generateBtn.querySelector('.btn-text') || document.createElement('span');
+        btnText.className = 'btn-text';
+        btnText.textContent = 'Generate Content';
+        if (!generateBtn.querySelector('.btn-text')) {
+            generateBtn.appendChild(btnText);
+        }
+        
+        generateBtn.addEventListener('click', async function() {
+            const contentType = document.getElementById('content-type').value;
+            const contentTopic = document.getElementById('content-topic').value;
+            const tone = document.getElementById('tone').value;
+            
+            if (!contentTopic.trim()) {
+                alert('Please enter a topic/description');
+                return;
+            }
+            
+            // Show loading state
+            generateBtn.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+            btnText.textContent = 'Generating...';
+            
+            try {
+                const response = await fetch('/generate-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()
+                    },
+                    body: JSON.stringify({
+                        content_type: contentType,
+                        topic: contentTopic,
+                        tone: tone
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Update results - using more specific selectors
+                    const postTextEl = aiResults.querySelector('.ai-result-item:nth-child(1) p');
+                    const hashtagsEl = aiResults.querySelector('.ai-result-item:nth-child(2) p');
+                    const ctaEl = aiResults.querySelector('.ai-result-item:nth-child(3) p');
+                    
+                    if (postTextEl && hashtagsEl && ctaEl) {
+                        postTextEl.textContent = data.post_text || '';
+                        hashtagsEl.textContent = data.hashtags || '';
+                        ctaEl.textContent = data.cta || '';
+                        aiResults.style.display = 'block';
+                    } else {
+                        throw new Error('Could not find result elements in DOM');
+                    }
+                } else {
+                    throw new Error(data.message || 'Content generation failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate content: ' + error.message);
+            } finally {
+                // Reset button
+                generateBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+                btnText.textContent = 'Generate Content';
+            }
+        });
+
+        // Image Generation Form
+        const imageForm = document.querySelectorAll('.ai-generator-form')[1];
+        const generateImageBtn = document.getElementById('generateImageBtn');
+        const imagePreview = document.getElementById('generated-image');
+        const downloadBtn = document.getElementById('download-btn');
+        const imageLoadingSpinner = document.createElement('span');
+        imageLoadingSpinner.className = 'loading-spinner';
+        generateImageBtn.prepend(imageLoadingSpinner);
+        const imageBtnText = generateImageBtn.querySelector('.btn-text') || document.createElement('span');
+        imageBtnText.className = 'btn-text';
+        imageBtnText.textContent = 'Generate Image';
+        if (!generateImageBtn.querySelector('.btn-text')) {
+            generateImageBtn.appendChild(imageBtnText);
+        }
+        
+        generateImageBtn.addEventListener('click', async function() {
+            const description = document.getElementById('image-description').value;
+            const style = document.getElementById('image-style').value;
+            
+            if (!description.trim()) {
+                alert('Please enter an image description');
+                return;
+            }
+            
+            // Show loading state
+            generateImageBtn.disabled = true;
+            imageLoadingSpinner.style.display = 'inline-block';
+            imageBtnText.textContent = 'Generating...';
+            
+            try {
+                const response = await fetch('/generate-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()
+                    },
+                    body: JSON.stringify({
+                        description: description,
+                        style: style
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.images && data.images.length > 0) {
+                    // Show generated image
+                    imagePreview.src = data.images[0];
+                    imagePreview.style.display = 'block';
+                    downloadBtn.style.display = 'inline-block';
+                    
+                    // Set up download
+                    downloadBtn.onclick = function() {
+                        const link = document.createElement('a');
+                        link.href = data.images[0];
+                        link.download = 'pelestia-generated-image.png';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    };
+                } else {
+                    throw new Error(data.message || 'Image generation failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate image: ' + error.message);
+            } finally {
+                // Reset button
+                generateImageBtn.disabled = false;
+                imageLoadingSpinner.style.display = 'none';
+                imageBtnText.textContent = 'Generate Image';
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="content-hero">
+    <div class="content-hero-content">
+        <h1>Unlock Your Creative Potential with AI-Powered Content Creation</h1>
+        <p>Get access to powerful templates and AI-generated content for social media, blogs, and more – create posts, captions, and visuals effortlessly!</p>
+        <a href="#ai-generator" class="content-hero-btn">Try Content Generator Now</a>
+    </div>
+</section>
+
+<!-- Templates Section -->
+<section class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">Create Stunning Content with AI-Generated Templates & Visuals</h2>
+        
+        <div class="template-categories">
+            <div class="template-category active">All Templates</div>
+            <div class="template-category">Social Media</div>
+            <div class="template-category">Blog Posts</div>
+            <div class="template-category">Email</div>
+            <div class="template-category">Stories</div>
+        </div>
+        
+        <div class="templates-grid">
+            <!-- Instagram Post Template -->
+            <div class="template-card">
+                <div class="template-preview">
+                    Instagram Post Preview
+                </div>
+                <div class="template-info">
+                    <h3>Instagram Post</h3>
+                    <p>Eye-catching templates optimized for Instagram engagement</p>
+                    <a href="#" class="template-btn">Use Template</a>
+                </div>
+            </div>
+            
+            <!-- Blog Post Template -->
+            <div class="template-card">
+                <div class="template-preview">
+                    Blog Post Preview
+                </div>
+                <div class="template-info">
+                    <h3>Blog Post</h3>
+                    <p>Professional blog templates with SEO optimization</p>
+                    <a href="#" class="template-btn">Use Template</a>
+                </div>
+            </div>
+            
+            <!-- Email Newsletter Template -->
+            <div class="template-card">
+                <div class="template-preview">
+                    Email Preview
+                </div>
+                <div class="template-info">
+                    <h3>Email Newsletter</h3>
+                    <p>Responsive email templates for better open rates</p>
+                    <a href="#" class="template-btn">Use Template</a>
+                </div>
+            </div>
+            
+            <!-- Facebook Ad Template -->
+            <div class="template-card">
+                <div class="template-preview">
+                    Facebook Ad Preview
+                </div>
+                <div class="template-info">
+                    <h3>Facebook Ad</h3>
+                    <p>High-converting ad templates for Facebook</p>
+                    <a href="#" class="template-btn">Use Template</a>
+                </div>
+            </div>
+            
+            <!-- LinkedIn Post Template -->
+            <div class="template-card">
+                <div class="template-preview">
+                    LinkedIn Post Preview
+                </div>
+                <div class="template-info">
+                    <h3>LinkedIn Post</h3>
+                    <p>Professional templates for LinkedIn engagement</p>
+                    <a href="#" class="template-btn">Use Template</a>
+                </div>
+            </div>
+            
+            <!-- Instagram Story Template -->
+            <div class="template-card">
+                <div class="template-preview">
+                    Instagram Story Preview
+                </div>
+                <div class="template-info">
+                    <h3>Instagram Story</h3>
+                    <p>Interactive story templates with animations</p>
+                    <a href="#" class="template-btn">Use Template</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AI Generator Section -->
+<section class="content-section" id="ai-generator">
+    <div class="section-container">
+        <h2 class="section-title">AI Content Generator</h2>
+        
+        <div class="ai-generator">
+            <form class="ai-generator-form">
+                <div class="form-group">
+                    <label for="content-type">Content Type</label>
+                    <select id="content-type">
+                        <option>Social Media Post</option>
+                        <option>Blog Post</option>
+                        <option>Email</option>
+                        <option>Product Description</option>
+                        <option>Ad Copy</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content-topic">Topic/Description</label>
+                    <textarea id="content-topic" placeholder="Describe what you want to create (e.g., 'Promote our new summer collection for young adults')"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tone">Tone</label>
+                    <select id="tone">
+                        <option>Professional</option>
+                        <option>Friendly</option>
+                        <option>Casual</option>
+                        <option>Enthusiastic</option>
+                        <option>Authoritative</option>
+                    </select>
+                </div>
+                
+                <button type="button" class="generate-btn">
+                    <span class="loading-spinner"></span>
+                    <span class="btn-text">Generate Content</span>
+                </button>
+            </form>
+            
+            <div class="ai-results" style="display: none;">
+                <h3>Generated Content</h3>
+                
+                <div class="ai-result-item">
+                    <h4>Post Text</h4>
+                    <p class="post-text"></p>
+                </div>
+                
+                <div class="ai-result-item">
+                    <h4>Hashtags</h4>
+                    <p class="hashtags"></p>
+                </div>
+                
+                <div class="ai-result-item">
+                    <h4>Call-to-Action</h4>
+                    <p class="cta"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Image Generator Section -->
+<section class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">Generate Engaging Images & Visuals with AI</h2>
+        
+        <div class="ai-generator">
+            <form class="ai-generator-form">
+                <div class="form-group">
+                    <label for="image-description">Image Description</label>
+                    <textarea id="image-description" placeholder="Describe the image you want to create (e.g., 'A stylish summer outfit displayed on a mannequin with a beach background')"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image-style">Style</label>
+                    <select id="image-style">
+                        <option>Realistic</option>
+                        <option>Digital Art</option>
+                        <option>Watercolor</option>
+                    </select>
+                </div>
+                
+                <button type="button" id="generateImageBtn" class="generate-btn">
+                    <span class="loading-spinner"></span>
+                    <span class="btn-text">Generate Image</span>
+                </button>
+            </form>
+            
+            <div class="image-preview-container">
+                <img id="generated-image" alt="Generated image will appear here">
+            </div>
+            <button id="download-btn" class="download-btn" style="display: none;">Download Image</button>
+        </div>
+    </div>
+</section>
+
+<!-- Optimization Section -->
+<section class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">Optimize Your Content for Maximum Engagement</h2>
+        
+        <div class="optimization-cards">
+            <div class="optimization-card">
+                <h3>Audience Targeting</h3>
+                <p>Our AI analyzes your target audience and suggests optimal language and themes to increase engagement.</p>
+                <p><strong>Tip:</strong> Focus on emotional triggers that resonate with your audience.</p>
+            </div>
+            
+            <div class="optimization-card">
+                <h3>Best Time to Post</h3>
+                <p>Get recommendations for the ideal posting times based on Algerian market trends and your industry.</p>
+                <p><strong>Recommended:</strong> Post between 7-9 PM for maximum visibility.</p>
+            </div>
+            
+            <div class="optimization-card">
+                <h3>Content Format</h3>
+                <p>Discover which formats (image, video, carousel) perform best for your type of content.</p>
+                <p><strong>Insight:</strong> Videos get 3x more engagement than static images.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">How to Create Content with AI</h2>
+        
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Select a Template</h3>
+                <p>Choose from our library of professionally designed templates or start from scratch.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Customize</h3>
+                <p>Add your text, images, and adjust the design to match your brand identity.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Enhance with AI</h3>
+                <p>Let our AI suggest improvements to your text, captions, hashtags, and visuals.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Publish & Track</h3>
+                <p>Publish directly to your platforms or download, then track performance.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Limitations Section -->
+<section class="content-section">
+    <div class="section-container">
+        <div class="limitations">
+            <h3>Monthly Plan Limitations</h3>
+            <ul>
+                <li>50 AI-generated posts per month</li>
+                <li>Access to basic templates and AI-generated images</li>
+                <li>Performance insights for 10 posts per month</li>
+            </ul>
+            <a href="/yearly-paid-plan" class="upgrade-btn">Upgrade for More Features</a>
+        </div>
+    </div>
+</section>
+
+<!-- Template Modal -->
+<div id="templateModal" class="template-modal">
+    <div class="template-modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="template-modal-header">
+            <h2 id="modalTemplateTitle">Template Title</h2>
+            <p id="modalTemplateCategory">Category</p>
+        </div>
+        <div class="template-modal-body" id="modalTemplateContent">
+            <!-- Template content will be inserted here -->
+        </div>
+        <div class="template-actions">
+            <button class="modal-template-btn use-template-btn">Use This Template</button>
+            <button class="modal-template-btn close-template-btn">Close</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

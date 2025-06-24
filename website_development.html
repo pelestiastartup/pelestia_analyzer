@@ -1,0 +1,607 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Website Development | Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .service-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: url("{{ url_for('static', filename='images/webdev-pattern.png') }}") no-repeat;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .service-hero h1 {
+        font-size: 2.8em;
+        color: #8B0000;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .service-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto 40px;
+        position: relative;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+        color: white;
+        margin-bottom: 50px;
+    }
+    
+    .cta-section h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    
+    .cta-section p {
+        max-width: 700px;
+        margin: 0 auto 30px;
+        font-size: 1.1em;
+        opacity: 0.9;
+    }
+    
+    .cta-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: white;
+        color: #8B0000;
+        border-radius: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Content Section */
+    .service-content {
+        padding: 80px 20px;
+        background-color: white;
+    }
+    
+    .service-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    
+    .service-description {
+        background: #f9f9f9;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-description::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: #8B0000;
+        opacity: 0.1;
+        border-radius: 50%;
+        transform: translate(50%, 50%);
+    }
+    
+    .service-description h2 {
+        color: #8B0000;
+        margin-bottom: 20px;
+        font-size: 2em;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .service-description h2::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #8B0000;
+        margin-top: 10px;
+    }
+    
+    .service-description p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+    
+    /* Benefits Section */
+    .benefits-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .benefits-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-top: 4px solid #8B0000;
+        transition: all 0.3s ease;
+    }
+    
+    .benefits-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .benefits-card h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .benefits-card h3 i {
+        font-size: 1.2em;
+    }
+    
+    .benefits-card ul {
+        padding-left: 20px;
+        color: #555;
+        line-height: 1.8;
+    }
+    
+    .benefits-card li {
+        margin-bottom: 10px;
+        position: relative;
+    }
+    
+    .benefits-card li::before {
+        content: '•';
+        color: #8B0000;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+
+    /* Website Types Section */
+    .website-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .website-type-card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid #eee;
+    }
+
+    .website-type-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .website-icon {
+        width: 80px;
+        height: 80px;
+        background: #8B0000;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 1.8em;
+    }
+
+    /* Process Section */
+    .process-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .process-step {
+        text-align: center;
+        position: relative;
+    }
+
+    .process-step:not(:last-child)::after {
+        content: '→';
+        position: absolute;
+        right: -25px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #8B0000;
+        font-size: 1.5em;
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: #8B0000;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    /* Demo Section */
+    .demo-section {
+        margin-top: 40px;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .demo-placeholder {
+        height: 300px;
+        background: #f9f9f9;
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        font-style: italic;
+        margin: 20px 0;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .service-hero {
+            padding: 80px 20px;
+        }
+        
+        .service-hero h1 {
+            font-size: 2em;
+        }
+        
+        .service-description {
+            padding: 30px 20px;
+        }
+        
+        .benefits-section {
+            grid-template-columns: 1fr;
+        }
+
+        .process-steps {
+            grid-template-columns: 1fr;
+        }
+
+        .process-step:not(:last-child)::after {
+            display: none;
+        }
+
+        .process-step {
+            margin-bottom: 30px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="service-hero">
+    <div class="container">
+        <h1>Custom Website Development for Algerian Businesses</h1>
+        <p>From simple landing pages to complex web applications, we build digital experiences that convert visitors into customers.</p>
+        <a href="#service-details" class="btn">Explore Our Process →</a>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Establish Your Online Presence?</h2>
+        <p>Each of our plans includes website development services. Choose the plan that best fits your business needs.</p>
+        <a href="/plans" class="cta-btn">Explore Plans</a>
+    </div>
+</section>
+
+<!-- Main Content Section -->
+<section class="service-content" id="service-details">
+    <div class="service-container">
+        <div class="service-description">
+            <h2><i class="fas fa-laptop-code"></i> Tailored Web Solutions</h2>
+            <p>In today's digital age, your website is often the first impression customers have of your business. We specialize in creating fast, responsive, and visually appealing websites that are optimized for the Algerian market and beyond.</p>
+            <p>Our team combines technical expertise with marketing knowledge to build websites that not only look great but also drive results - whether that's generating leads, selling products, or establishing your brand online.</p>
+            
+            <div class="benefits-section">
+                <div class="benefits-card">
+                    <h3><i class="fas fa-check-circle"></i> Why Choose Our Web Development</h3>
+                    <ul>
+                        <li><strong>Algerian Market Focus:</strong> We understand local preferences and browsing habits</li>
+                        <li><strong>Mobile-First Approach:</strong> Over 70% of Algerians browse on mobile devices</li>
+                        <li><strong>SEO Optimized:</strong> Built to rank well in search engines from day one</li>
+                        <li><strong>Fast Loading:</strong> Optimized for Algeria's varying internet speeds</li>
+                        <li><strong>Multilingual Support:</strong> Arabic, French, English, and Tamazight options</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-chart-line"></i> Business Benefits</h3>
+                    <ul>
+                        <li>24/7 online presence for your business</li>
+                        <li>Professional image that builds trust</li>
+                        <li>Generate leads even while you sleep</li>
+                        <li>Showcase products/services effectively</li>
+                        <li>Compete with larger businesses</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Website Types Section -->
+<section class="service-content" style="background-color: #f9f9f9;">
+    <div class="service-container">
+        <div class="service-description" style="background: white;">
+            <h2><i class="fas fa-layer-group"></i> Types of Websites We Build</h2>
+            <p>We create custom solutions tailored to your specific business needs and goals:</p>
+            
+            <div class="website-types">
+                <div class="website-type-card">
+                    <div class="website-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3>Business Websites</h3>
+                    <p>Professional sites to showcase your company, services, and establish credibility.</p>
+                </div>
+                
+                <div class="website-type-card">
+                    <div class="website-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>E-Commerce Stores</h3>
+                    <p>Full online stores with product catalogs, shopping carts, and payment integration.</p>
+                </div>
+                
+                <div class="website-type-card">
+                    <div class="website-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <h3>Institutional Sites</h3>
+                    <p>For government entities, NGOs, and educational institutions.</p>
+                </div>
+                
+                <div class="website-type-card">
+                    <div class="website-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Web Applications</h3>
+                    <p>Custom business applications with user accounts and advanced functionality.</p>
+                </div>
+                
+                <div class="website-type-card">
+                    <div class="website-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h3>Blogs & Portfolios</h3>
+                    <p>For content creators, artists, and professionals to showcase their work.</p>
+                </div>
+                
+                <div class="website-type-card">
+                    <div class="website-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Booking Systems</h3>
+                    <p>For hotels, clinics, and service businesses to manage appointments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Process Section -->
+<section class="service-content">
+    <div class="service-container">
+        <div class="service-description">
+            <h2><i class="fas fa-project-diagram"></i> Our Website Development Process</h2>
+            <p>We follow a structured approach to ensure your website meets your business objectives:</p>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>Discovery</h3>
+                    <p>We learn about your business, goals, and target audience</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>Planning</h3>
+                    <p>Site architecture, features, and technology selection</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>Design</h3>
+                    <p>Custom mockups and UI/UX tailored to your brand</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>Development</h3>
+                    <p>Coding and building all website functionality</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3>Testing</h3>
+                    <p>Quality assurance across devices and browsers</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">6</div>
+                    <h3>Launch</h3>
+                    <p>Deployment and post-launch support</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="/contact" class="cta-btn" style="background: #8B0000; color: white;">Request Process Details</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technologies Section -->
+<section class="service-content" style="background-color: #f9f9f9;">
+    <div class="service-container">
+        <div class="service-description" style="background: white;">
+            <h2><i class="fas fa-cogs"></i> Technologies We Use</h2>
+            <p>We select the right tools for each project based on your requirements:</p>
+            
+            <div class="benefits-section">
+                <div class="benefits-card">
+                    <h3><i class="fab fa-html5"></i> Frontend</h3>
+                    <ul>
+                        <li>HTML5, CSS3, JavaScript (ES6+)</li>
+                        <li>React.js, Vue.js, Angular</li>
+                        <li>Bootstrap, Tailwind CSS</li>
+                        <li>Responsive & Mobile-First Design</li>
+                        <li>PWA (Progressive Web Apps)</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-server"></i> Backend</h3>
+                    <ul>
+                        <li>Node.js, Python (Django, Flask)</li>
+                        <li>PHP (Laravel, Symfony)</li>
+                        <li>MySQL, PostgreSQL, MongoDB</li>
+                        <li>RESTful APIs, GraphQL</li>
+                        <li>Serverless Architecture</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-shopping-cart"></i> E-Commerce</h3>
+                    <ul>
+                        <li>WooCommerce, Shopify</li>
+                        <li>Magento, PrestaShop</li>
+                        <li>Custom Cart Solutions</li>
+                        <li>Payment Gateway Integration</li>
+                        <li>Inventory Management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Case Studies Section -->
+<section class="service-content">
+    <div class="service-container">
+        <div class="service-description">
+            <h2><i class="fas fa-trophy"></i> Algerian Success Stories</h2>
+            <p>Here are some websites we've built for Algerian businesses:</p>
+            
+            <div class="benefits-section">
+                <div class="benefits-card">
+                    <h3><i class="fas fa-tshirt"></i> Fashion E-Commerce</h3>
+                    <ul>
+                        <li><strong>Client:</strong> Algiers-based clothing brand</li>
+                        <li><strong>Challenge:</strong> Needed modern online store with local payment options</li>
+                        <li><strong>Solution:</strong> Custom Shopify store with CIB payment integration</li>
+                        <li><strong>Result:</strong> 200% increase in online sales within 3 months</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-utensils"></i> Restaurant Website</h3>
+                    <ul>
+                        <li><strong>Client:</strong> Popular Oran restaurant</li>
+                        <li><strong>Challenge:</strong> Needed online menu and reservation system</li>
+                        <li><strong>Solution:</strong> Responsive website with real-time booking</li>
+                        <li><strong>Result:</strong> 80% reduction in phone reservations, better customer experience</li>
+                    </ul>
+                </div>
+                
+                <div class="benefits-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Educational Platform</h3>
+                    <ul>
+                        <li><strong>Client:</strong> Algerian online learning startup</li>
+                        <li><strong>Challenge:</strong> Needed scalable learning management system</li>
+                        <li><strong>Solution:</strong> Custom Laravel platform with video hosting</li>
+                        <li><strong>Result:</strong> Supported 5,000+ students in first year</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="/portfolio" class="cta-btn" style="background: #8B0000; color: white;">View Full Portfolio</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo Section -->
+<section class="service-content" style="background-color: #f9f9f9;">
+    <div class="service-container">
+        <div class="service-description" style="background: white;">
+            <h2><i class="fas fa-desktop"></i> Website Builder Preview</h2>
+            <p>See how our website development process works:</p>
+            
+            <div class="demo-section">
+                <div class="demo-placeholder">
+                    Interactive Website Builder Coming Soon
+                </div>
+                <p style="text-align: center; font-style: italic;">Our demo will showcase how we transform your ideas into a fully functional website.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Let's Build Your Dream Website</h2>
+        <p>Get a free consultation and quote for your custom website project.</p>
+        <a href="/contact" class="cta-btn">Request Free Consultation</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer_text %}Building Digital Experiences for Algerian Businesses{% endblock %}

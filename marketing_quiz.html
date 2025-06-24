@@ -1,0 +1,324 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Marketing Strategy Assessment - Pelestia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .flashcard-container {
+        max-width: 800px;
+        margin: 40px auto;
+        perspective: 1000px;
+    }
+    
+    .flashcard-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .flashcard-header h1 {
+        color: #8B0000;
+        margin-bottom: 10px;
+    }
+    
+    .flashcard-header p {
+        color: #666;
+    }
+    
+    .flashcard {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+        transform-style: preserve-3d;
+        transition: all 0.5s ease;
+        position: relative;
+        text-align: center;
+    }
+    
+    .flashcard h2 {
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+    
+    .flashcard p {
+        margin-bottom: 25px;
+        line-height: 1.6;
+    }
+    
+    .options {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .option {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+    }
+    
+    .option:hover {
+        background: #f0f0f0;
+        border-color: #8B0000;
+    }
+    
+    .option input {
+        margin-right: 15px;
+    }
+    
+    /* Custom Radio Buttons with Red Selection Dot */
+    .option input[type="radio"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #8B0000;
+        border-radius: 50%;
+        outline: none;
+        position: relative;
+    }
+    
+    .option input[type="radio"]:checked {
+        background-color: white;
+        border-color: #8B0000;
+    }
+    
+    .option input[type="radio"]:checked::after {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 10px;
+        background: #8B0000;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+    }
+    
+    .flashcard-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+    
+    .nav-btn {
+        padding: 12px 25px;
+        background-color: #8B0000;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    
+    .nav-btn:hover {
+        background-color: #A52A2A;
+    }
+    
+    .nav-btn:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+    
+    .progress-indicator {
+        text-align: center;
+        margin: 20px 0;
+        color: #666;
+        font-weight: bold;
+    }
+    
+    .error-message {
+        color: #d9534f;
+        margin-top: 5px;
+        font-size: 0.9em;
+        text-align: center;
+    }
+    
+    .intro-card, .final-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .start-btn, .trial-btn {
+        padding: 15px 40px;
+        font-size: 1.1em;
+        background-color: #8B0000;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        margin-top: 20px;
+    }
+    
+    .start-btn:hover, .trial-btn:hover {
+        background-color: #A52A2A;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flashcard-container">
+    <div class="flashcard-header">
+        <h1>Your Marketing Strategy Assessment</h1>
+        <p>Answer these questions to get personalized recommendations for your business growth</p>
+    </div>
+    
+    {% if error %}
+        <div style="color: #d9534f; margin-bottom: 20px; padding: 10px; background: #f8d7da; border-radius: 5px;">
+            {{ error }}
+        </div>
+    {% endif %}
+    
+    <form method="POST" action="/marketing-quiz" id="quizForm">
+        <!-- Intro Card -->
+        <div class="flashcard intro-card" id="introCard" style="display: block;">
+            <h2>Let's discover the perfect services for your business!</h2>
+            <p>Before we make personalized recommendations, we need to learn more about you and your business. This quick quiz will help us understand your goals, challenges, and needs. The answers will allow us to provide tailored solutions that can truly make a difference.</p>
+            <p>Click Start to get started — we're excited to help you!</p>
+            <button type="button" class="start-btn" id="startBtn">Start Assessment</button>
+        </div>
+        
+        <!-- Quiz Questions -->
+        {% for question in questions %}
+            <div class="flashcard" id="q{{ question.id }}" style="display: none;">
+                <h2>{{ question.question }}</h2>
+                <div class="options">
+                    {% for option in question.options %}
+                        <label class="option">
+                            <input type="radio" name="q{{ question.id }}" value="{{ option }}" 
+                                   {% if missing_questions and question.id in missing_questions %}style="border-color: #d9534f;"{% endif %}>
+                            {{ option }}
+                        </label>
+                    {% endfor %}
+                </div>
+                {% if missing_questions and question.id in missing_questions %}
+                    <div class="error-message">Please select an answer</div>
+                {% endif %}
+                
+                <div class="flashcard-nav">
+                    <button type="button" class="nav-btn prev-btn" {% if loop.first %}disabled{% endif %}>Previous</button>
+                    {% if loop.last %}
+                        <button type="submit" class="nav-btn">Submit Answers</button>
+                    {% else %}
+                        <button type="button" class="nav-btn next-btn">Next</button>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        
+        <!-- Final Card -->
+        <div class="flashcard final-card" id="finalCard" style="display: none;">
+            <h2>Thanks for completing the quiz!</h2>
+            <p>Based on your answers, we recommend the following services to help your business grow. Ready to take the next step? Let's get started!</p>
+            <button type="button" class="trial-btn" id="trialBtn">Start Your Free 5-Day Trial</button>
+        </div>
+        
+        <div class="progress-indicator">
+            Question <span id="currentQuestion">0</span> of {{ questions|length }}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const introCard = document.getElementById('introCard');
+        const finalCard = document.getElementById('finalCard');
+        const flashcards = document.querySelectorAll('.flashcard:not(.intro-card):not(.final-card)');
+        const startBtn = document.getElementById('startBtn');
+        const trialBtn = document.getElementById('trialBtn');
+        const prevButtons = document.querySelectorAll('.prev-btn');
+        const nextButtons = document.querySelectorAll('.next-btn');
+        const currentQuestionSpan = document.getElementById('currentQuestion');
+        const quizForm = document.getElementById('quizForm');
+        
+        let currentCardIndex = -1; // -1 for intro card
+        
+        function showCard(index) {
+            // Hide all cards
+            introCard.style.display = 'none';
+            finalCard.style.display = 'none';
+            flashcards.forEach(card => card.style.display = 'none');
+            
+            // Show appropriate card
+            if (index === -1) {
+                introCard.style.display = 'block';
+                currentQuestionSpan.textContent = '0';
+            } else if (index >= flashcards.length) {
+                finalCard.style.display = 'flex';
+                currentQuestionSpan.textContent = flashcards.length;
+            } else {
+                flashcards[index].style.display = 'block';
+                currentQuestionSpan.textContent = index + 1;
+            }
+            
+            // Enable/disable previous buttons
+            prevButtons.forEach(btn => {
+                btn.disabled = index <= 0;
+            });
+        }
+        
+        // Start button click handler
+        startBtn.addEventListener('click', function() {
+            currentCardIndex = 0;
+            showCard(currentCardIndex);
+        });
+        
+        // Trial button click handler
+        trialBtn.addEventListener('click', function() {
+            // Redirect to trial signup or perform other action
+            window.location.href = "/free-trial";
+        });
+        
+        // Previous button handlers
+        prevButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (currentCardIndex > 0) {
+                    currentCardIndex--;
+                    showCard(currentCardIndex);
+                }
+            });
+        });
+        
+        // Next button handlers
+        nextButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // For non-last questions, validate current question has an answer
+                if (currentCardIndex < flashcards.length - 1) {
+                    const currentQuestionId = flashcards[currentCardIndex].id;
+                    const selectedOption = document.querySelector(`#${currentQuestionId} input[type="radio"]:checked`);
+                    
+                    if (!selectedOption) {
+                        alert('Please select an answer before proceeding.');
+                        return;
+                    }
+                }
+                
+                if (currentCardIndex < flashcards.length - 1) {
+                    currentCardIndex++;
+                    showCard(currentCardIndex);
+                } else {
+                    // Submit the form when clicking next on last question
+                    quizForm.submit();
+                }
+            });
+        });
+        
+        // Initialize to show intro card
+        showCard(-1);
+    });
+</script>
+{% endblock %}

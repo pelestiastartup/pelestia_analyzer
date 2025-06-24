@@ -1,0 +1,172 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pelestia - Frequently Asked Questions{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* FAQ Section */
+    .faq-section {
+        padding: 80px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .faq-title {
+        text-align: center;
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .faq-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #8B0000;
+        margin: 15px auto 0;
+    }
+
+    .faq-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .faq-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border-left: 4px solid #8B0000;
+    }
+
+    .faq-question {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-weight: 600;
+        color: #333;
+        position: relative;
+    }
+
+    .faq-question::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(139,0,0,0.05) 0%, rgba(139,0,0,0) 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .faq-question:hover::before {
+        opacity: 1;
+    }
+
+    .faq-toggle {
+        width: 30px;
+        height: 30px;
+        background-color: #8B0000;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        flex-shrink: 0;
+    }
+
+    .faq-answer {
+        padding: 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .faq-card.active .faq-answer {
+        padding: 0 20px 20px;
+        max-height: 500px;
+    }
+
+    .faq-card.active .faq-toggle {
+        transform: rotate(180deg);
+        background-color: #A52A2A;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .faq-title {
+            font-size: 2em;
+        }
+        
+        .faq-question {
+            padding: 15px;
+            font-size: 1em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="faq-section">
+    <h1 class="faq-title">Frequently Asked Questions</h1>
+    
+    <div class="faq-container">
+        {% for item in questions %}
+        <div class="faq-card">
+            <div class="faq-question">
+                {{ item.question }}
+                <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-answer">
+                {{ item.answer }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqCards = document.querySelectorAll('.faq-card');
+        
+        faqCards.forEach(card => {
+            const question = card.querySelector('.faq-question');
+            const toggle = card.querySelector('.faq-toggle');
+            
+            question.addEventListener('click', () => {
+                // Toggle active class on the card
+                card.classList.toggle('active');
+                
+                // Update toggle icon
+                toggle.textContent = card.classList.contains('active') ? '−' : '+';
+                
+                // Close other open FAQs
+                if (card.classList.contains('active')) {
+                    faqCards.forEach(otherCard => {
+                        if (otherCard !== card && otherCard.classList.contains('active')) {
+                            otherCard.classList.remove('active');
+                            otherCard.querySelector('.faq-toggle').textContent = '+';
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block footer_text %}Have more questions? <a href="/contact" style="color: #8B0000; text-decoration: underline;">Contact us</a> for personalized assistance.{% endblock %}

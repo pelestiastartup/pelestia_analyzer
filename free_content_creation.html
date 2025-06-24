@@ -1,0 +1,587 @@
+﻿<!-- templates/free_content_creation.html -->
+{% extends "base.html" %}
+
+{% block title %}Pelestia - Free Content Creation{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .content-creation-hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        position: relative;
+    }
+
+    .content-creation-hero h1 {
+        font-size: 2.5em;
+        color: #8B0000;
+        margin-bottom: 20px;
+    }
+
+    .content-creation-hero p {
+        font-size: 1.2em;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto 30px;
+    }
+
+    /* Main Content Area */
+    .content-creation-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    /* Template Selection Sidebar */
+    .template-sidebar {
+        flex: 1;
+        min-width: 300px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+    .template-sidebar h2 {
+        color: #8B0000;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #8B0000;
+    }
+
+    .template-categories {
+        margin-bottom: 30px;
+    }
+
+    .template-category {
+        margin-bottom: 15px;
+    }
+
+    .template-category h3 {
+        color: #333;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .template-category h3 i {
+        margin-right: 10px;
+        transition: transform 0.3s;
+    }
+
+    .template-category.active h3 i {
+        transform: rotate(90deg);
+    }
+
+    .template-list {
+        list-style: none;
+        padding-left: 30px;
+        margin-top: 10px;
+        display: none;
+    }
+
+    .template-category.active .template-list {
+        display: block;
+    }
+
+    .template-item {
+        padding: 8px 0;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .template-item:hover {
+        color: #8B0000;
+    }
+
+    .template-item.active {
+        font-weight: bold;
+        color: #8B0000;
+    }
+
+    /* Editor Area */
+    .editor-area {
+        flex: 3;
+        min-width: 300px;
+    }
+
+    .editor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .editor-header h2 {
+        color: #8B0000;
+        font-size: 1.5em;
+    }
+
+    .editor-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .editor-btn {
+        padding: 8px 15px;
+        background: #8B0000;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .editor-btn:hover {
+        background: #A52A2A;
+    }
+
+    .editor-btn.secondary {
+        background: white;
+        color: #8B0000;
+        border: 1px solid #8B0000;
+    }
+
+    .editor-btn.secondary:hover {
+        background: #f0f0f0;
+    }
+
+    .content-editor {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 20px;
+        min-height: 500px;
+        background: white;
+    }
+
+    #content-editor {
+        width: 100%;
+        min-height: 500px;
+        border: none;
+        outline: none;
+        resize: none;
+        font-family: inherit;
+        line-height: 1.6;
+    }
+
+    /* Preview Mode */
+    .preview-content {
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: white;
+    }
+
+    /* Wizard Styles */
+    .template-wizard {
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .template-wizard h3 {
+        color: #8B0000;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+
+    .wizard-field {
+        margin-bottom: 15px;
+    }
+
+    .wizard-field label {
+        display: block;
+        font-weight: bold;
+        color: #444;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .wizard-field input[type="text"],
+    .wizard-field textarea,
+    .wizard-field select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .wizard-field textarea {
+        min-height: 80px;
+    }
+
+    .wizard-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #8B0000;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    /* Preview styling */
+    .social-preview {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        max-width: 500px;
+    }
+
+    .social-preview-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .social-preview-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #8B0000;
+        margin-right: 10px;
+    }
+
+    .social-preview-content img {
+        max-width: 100%;
+        border-radius: 4px;
+        margin: 10px 0;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .content-creation-container {
+            flex-direction: column;
+        }
+        
+        .template-sidebar {
+            order: 1;
+        }
+        
+        .editor-area {
+            order: 2;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content-creation-hero">
+    <div class="container">
+        <h1>{{ _('Free Content Creation') }}</h1>
+        <p>{{ _('Create professional content quickly using our pre-designed templates. Perfect for businesses getting started with digital marketing.') }}</p>
+    </div>
+</section>
+
+<div class="content-creation-container">
+    <!-- Template Selection Sidebar -->
+    <div class="template-sidebar">
+        <h2>{{ _('Content Templates') }}</h2>
+        
+        <div class="template-categories">
+            <!-- Blog Templates -->
+            <div class="template-category active">
+                <h3><i class="fas fa-angle-right"></i> {{ _('Blog Templates') }}</h3>
+                <ul class="template-list">
+                    <li class="template-item {% if selected_template == 'blog-industry-insights' %}active{% endif %}" 
+                        onclick="location.href='?template=blog-industry-insights'">
+                        {{ _('Industry Insights') }}
+                    </li>
+                    <li class="template-item {% if selected_template == 'blog-how-to-guide' %}active{% endif %}" 
+                        onclick="location.href='?template=blog-how-to-guide'">
+                        {{ _('How-To Guide') }}
+                    </li>
+                    <li class="template-item {% if selected_template == 'blog-case-study' %}active{% endif %}" 
+                        onclick="location.href='?template=blog-case-study'">
+                        {{ _('Case Study') }}
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Social Media Templates -->
+            <div class="template-category active">
+                <h3><i class="fas fa-angle-right"></i> {{ _('Social Media') }}</h3>
+                <ul class="template-list">
+                    <li class="template-item {% if selected_template == 'social-product-feature' %}active{% endif %}" 
+                        onclick="location.href='?template=social-product-feature'">
+                        {{ _('Product Feature') }}
+                    </li>
+                    <li class="template-item {% if selected_template == 'social-business-tip' %}active{% endif %}" 
+                        onclick="location.href='?template=social-business-tip'">
+                        {{ _('Business Tip') }}
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Email Templates -->
+            <div class="template-category active">
+                <h3><i class="fas fa-angle-right"></i> {{ _('Email Templates') }}</h3>
+                <ul class="template-list">
+                    <li class="template-item {% if selected_template == 'email-welcome' %}active{% endif %}" 
+                        onclick="location.href='?template=email-welcome'">
+                        {{ _('Welcome Email') }}
+                    </li>
+                    <li class="template-item {% if selected_template == 'email-promotional' %}active{% endif %}" 
+                        onclick="location.href='?template=email-promotional'">
+                        {{ _('Promotional Email') }}
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Press Release Templates -->
+            <div class="template-category active">
+                <h3><i class="fas fa-angle-right"></i> {{ _('Press Releases') }}</h3>
+                <ul class="template-list">
+                    <li class="template-item {% if selected_template == 'press-product-launch' %}active{% endif %}" 
+                        onclick="location.href='?template=press-product-launch'">
+                        {{ _('Product Launch') }}
+                    </li>
+                    <li class="template-item {% if selected_template == 'press-partnership' %}active{% endif %}" 
+                        onclick="location.href='?template=press-partnership'">
+                        {{ _('Partnership Announcement') }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Editor Area -->
+    <div class="editor-area">
+        <div class="editor-header">
+            <h2>{{ templates[selected_template]['name'] }}</h2>
+            <div class="editor-actions">
+                <button class="editor-btn secondary" onclick="window.location.href='/free-plan'">
+                    <i class="fas fa-arrow-left"></i> {{ _('Back') }}
+                </button>
+                <button class="editor-btn" onclick="document.getElementById('content-form').submit()">
+                    <i class="fas fa-eye"></i> {{ _('Preview') }}
+                </button>
+            </div>
+        </div>
+        
+        <p>{{ templates[selected_template]['description'] }}</p>
+        
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <label class="switch">
+                <input type="checkbox" id="wizard-mode-toggle" checked>
+                <span class="slider round"></span>
+            </label>
+            <span>{{ _('Guided Mode') }}</span>
+        </div>
+        
+        <!-- Wizard Form -->
+        <div class="template-wizard" id="template-wizard">
+            <h3>{{ _('Personalize Your Content') }}</h3>
+            
+            <!-- Dynamic form fields will be inserted here -->
+            <div id="wizard-fields"></div>
+            
+            <div class="wizard-actions">
+                <button class="editor-btn" id="generate-content">
+                    <i class="fas fa-magic"></i> {{ _('Generate Content') }}
+                </button>
+                <button class="editor-btn secondary" id="manual-mode">
+                    <i class="fas fa-edit"></i> {{ _('Switch to Manual Mode') }}
+                </button>
+            </div>
+        </div>
+        
+        <form id="content-form" method="POST">
+            <input type="hidden" name="template" value="{{ selected_template }}">
+            
+            {% if not preview %}
+            <div class="content-editor">
+                <textarea id="content-editor" name="content">{{ content }}</textarea>
+            </div>
+            {% else %}
+            <div class="preview-content">
+                {{ content|safe }}
+            </div>
+            <div style="margin-top: 20px;">
+                <button type="button" class="editor-btn secondary" onclick="window.location.href='?template={{ selected_template }}'">
+                    <i class="fas fa-edit"></i> {{ _('Continue Editing') }}
+                </button>
+                <button type="button" class="editor-btn" onclick="alert('{{ _('This feature is available in paid plans') }}')">
+                    <i class="fas fa-download"></i> {{ _('Download') }}
+                </button>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<script>
+    // Initialize template categories
+    document.querySelectorAll('.template-category h3').forEach(header => {
+        header.addEventListener('click', function() {
+            this.parentElement.classList.toggle('active');
+        });
+    });
+
+    // Initialize the text editor for HTML content
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('content-editor');
+        if (textarea) {
+            // Simple editor functionality
+            textarea.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    
+                    // Set textarea value to: text before caret + tab + text after caret
+                    this.value = this.value.substring(0, start) + '\t' + this.value.substring(end);
+                    
+                    // Put caret at right position again
+                    this.selectionStart = this.selectionEnd = start + 1;
+                }
+            });
+        }
+
+        // Wizard mode toggle functionality
+        const wizardToggle = document.getElementById('wizard-mode-toggle');
+        const wizardForm = document.getElementById('template-wizard');
+        const contentEditor = document.querySelector('.content-editor');
+        
+        function toggleWizardMode() {
+            if (wizardToggle.checked) {
+                wizardForm.style.display = 'block';
+                if (contentEditor) contentEditor.style.display = 'none';
+            } else {
+                wizardForm.style.display = 'none';
+                if (contentEditor) contentEditor.style.display = 'block';
+            }
+        }
+        
+        wizardToggle.addEventListener('change', toggleWizardMode);
+        
+        // Initialize the view
+        toggleWizardMode();
+        
+        // Manual mode button
+        document.getElementById('manual-mode').addEventListener('click', function() {
+            wizardToggle.checked = false;
+            toggleWizardMode();
+        });
+        
+        // Generate content button
+        document.getElementById('generate-content').addEventListener('click', function() {
+            // This would be replaced with actual content generation logic
+            alert('Content generation would happen here based on the form inputs');
+        });
+        
+        // Load template-specific fields
+        function loadTemplateFields() {
+            const templateFields = {
+                'blog-industry-insights': [
+                    { type: 'text', id: 'topic', label: 'Industry Topic' },
+                    { type: 'text', id: 'trend', label: 'Current Trend' },
+                    { type: 'textarea', id: 'key-points', label: 'Key Points' }
+                ],
+                'social-product-feature': [
+                    { type: 'text', id: 'product-name', label: 'Product Name' },
+                    { type: 'text', id: 'feature', label: 'Main Feature' },
+                    { type: 'textarea', id: 'benefits', label: 'Customer Benefits' }
+                ]
+                // Add fields for other templates
+            };
+            
+            const fieldsContainer = document.getElementById('wizard-fields');
+            fieldsContainer.innerHTML = '';
+            
+            const fields = templateFields[new URLSearchParams(window.location.search).get('template')] || [];
+            
+            fields.forEach(field => {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'wizard-field';
+                
+                const label = document.createElement('label');
+                label.htmlFor = field.id;
+                label.textContent = field.label;
+                
+                let input;
+                if (field.type === 'textarea') {
+                    input = document.createElement('textarea');
+                    input.id = field.id;
+                    input.name = field.id;
+                    input.rows = 3;
+                } else {
+                    input = document.createElement('input');
+                    input.type = field.type;
+                    input.id = field.id;
+                    input.name = field.id;
+                }
+                
+                fieldDiv.appendChild(label);
+                fieldDiv.appendChild(input);
+                fieldsContainer.appendChild(fieldDiv);
+            });
+        }
+        
+        // Load fields when template changes
+        window.addEventListener('load', loadTemplateFields);
+    });
+</script>
+{% endblock %}
