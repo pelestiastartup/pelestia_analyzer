@@ -15,6 +15,11 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
+REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
+GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD")
+
 # Custom JSON Provider to handle special types
 class CustomJSONProvider(JSONProvider):
     def default(self, obj):
